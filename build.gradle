@@ -9,25 +9,41 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'com.github.GTNewHorizons:ForgeGradle:1.2.9'
     }
 }
 
 apply plugin: 'forge'
 
 version = "1.0"
-group= "modgroup"
-archivesBaseName = "modid"
+group= "dev.tilera.modding"
+archivesBaseName = "cwg"
 
 minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"
     runDir = "run"
 }
 
-dependencies {
 
+repositories {
+    mavenCentral()
+    maven {
+        url = "https://maven.tilera.xyz"
+    }
+    maven { url 'https://jitpack.io' }
+    maven {
+        name 'Overmind forge repo mirror'
+        url 'https://gregtech.overminddl1.com/'
+    }
+}
+
+dependencies {
+// Mixins currently not needed, maybe later when changing other worldgen
+//    compile "com.github.tox1cozZ:mixin-booter-legacy:1.1.2"
+//    annotationProcessor "com.github.tox1cozZ:mixin-booter-legacy:1.1.2:processor"
 }
 
 processResources
@@ -43,5 +59,16 @@ processResources
       
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+        resources {
+            srcDir 'src/main/resources'
+        }
     }
 }
