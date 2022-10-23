@@ -1,0 +1,17 @@
+{
+    "package": "dev.tilera.cwg.mixins",
+    "refmap": "cwg.refmap.json",
+    "minVersion": "0.8",
+    "compatibilityLevel": "JAVA_8",
+    "mixins": [
+      "MixinGenLayer", 
+      "MixinBiomeGenBase", 
+      "MixinBiomeGenJungle", 
+      "MixinBiomeGenHills", 
+      "MixinBiomeGenPlains", 
+      "MixinBiomeGenSwamp", 
+      "MixinGenDoublePlant"],
+    "injectors": {
+      "defaultRequire": 1
+    }
+}
