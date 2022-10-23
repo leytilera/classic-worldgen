@@ -47,6 +47,8 @@ public class GenLayerBiomeClassic extends GenLayer {
            addedBiomes.add(BiomeGenBase.savanna);
            biomeEntries.add(new BiomeEntry(BiomeGenBase.savannaPlateau, 10));
            addedBiomes.add(BiomeGenBase.savannaPlateau);
+           biomeEntries.add(new BiomeEntry(BiomeGenBase.megaTaiga, 10));
+           addedBiomes.add(BiomeGenBase.megaTaiga);
         }
 
         for (BiomeType t : BiomeType.values()) {

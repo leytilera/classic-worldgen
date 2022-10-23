@@ -18,6 +18,7 @@ buildscript {
 
 apply plugin: 'forge'
 apply plugin: 'maven-publish'
+apply from: './gradle/scripts/mixins.gradle'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -121,4 +122,8 @@ publishing {
                 mavenLocal()
         }
     }
+}
+
+mixin {
+    mixinRefMapName = 'cwg.refmap.json'
 }

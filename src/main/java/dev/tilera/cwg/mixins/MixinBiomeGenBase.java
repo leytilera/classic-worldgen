@@ -22,7 +22,7 @@ public abstract class MixinBiomeGenBase {
      * @author tilera
      * @reason No snow on hills
      */
-    @Overwrite(remap = false)
+    @Overwrite
     public final float getFloatTemperature(int p_150564_1_, int p_150564_2_, int p_150564_3_) {
         if (p_150564_2_ > 64 && Config.enableHeightSnow) {
            float f = (float)temperatureNoise.func_151601_a((double)p_150564_1_ * 1.0D / 8.0D, (double)p_150564_3_ * 1.0D / 8.0D) * 4.0F;
