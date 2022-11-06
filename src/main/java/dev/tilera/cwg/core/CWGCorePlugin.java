@@ -8,6 +8,7 @@ import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.Name;
+import dev.tilera.cwg.Constants;
 import io.github.tox1cozz.mixinbooterlegacy.IEarlyMixinLoader;
 
 @Name("CWG Core Plugin")
@@ -52,7 +53,7 @@ public class CWGCorePlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
             ModMetadata meta = getMetadata();
             meta.modId = "cwgcore";
             meta.name = "CWG Core Plugin";
-            meta.version = "1.0.0";
+            meta.version = Constants.VERSION;
         }
 
     }

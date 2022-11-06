@@ -19,10 +19,12 @@ import net.minecraftforge.common.BiomeManager.BiomeType;
 public class GenLayerBiomeClassic extends GenLayer {
 
     private BiomeEntry[] allowedBiomes;
+    private boolean hasBiomeWeights;
 
     public GenLayerBiomeClassic(long arg0, GenLayer parent, WorldType type) {
         super(arg0);
         super.parent = parent;
+        hasBiomeWeights = false;
         BiomeGenBase[] vanillaBiomes = new BiomeGenBase[]{BiomeGenBase.desert, BiomeGenBase.forest, BiomeGenBase.extremeHills, BiomeGenBase.swampland, BiomeGenBase.plains, BiomeGenBase.coldTaiga, BiomeGenBase.jungle};
         Set<BiomeGenBase> addedBiomes = new HashSet<>();
         ArrayList<BiomeEntry> biomeEntries = new ArrayList<>();
@@ -57,6 +59,7 @@ public class GenLayerBiomeClassic extends GenLayer {
                 if ((biome.biome.biomeID < 40 && Config.blockNewVanillaBiomes) || addedBiomes.contains(biome.biome)) continue;
                 addedBiomes.add(biome.biome);
                 biomeEntries.add(biome);
+                if (biome.itemWeight != 10) hasBiomeWeights = true;
             }
         }
         allowedBiomes = biomeEntries.toArray(new BiomeEntry[biomeEntries.size()]);
@@ -93,7 +96,7 @@ public class GenLayerBiomeClassic extends GenLayer {
     }
     
     protected int getBiomeID() {
-       if (Config.respectBiomeWeight) {
+       if (hasBiomeWeights) {
           return getWeightedBiomeEntry().biome.biomeID;
        } else {
           return this.allowedBiomes[this.nextInt(this.allowedBiomes.length)].biome.biomeID;

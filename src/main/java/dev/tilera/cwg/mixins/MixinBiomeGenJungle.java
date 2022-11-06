@@ -5,7 +5,7 @@ import java.util.Random;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-import dev.tilera.cwg.Config;
+import dev.tilera.cwg.ClassicWorldgen;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenJungle;
@@ -34,7 +34,7 @@ public abstract class MixinBiomeGenJungle extends BiomeGenBase {
         }
   
         int i1 = p_76728_2_.nextInt(height);
-        if (Config.enableJungleMelons)
+        if (p_76728_1_.getWorldInfo().getTerrainType() != ClassicWorldgen.CLASSIC)
             (new WorldGenMelon()).generate(p_76728_1_, p_76728_2_, k, i1, l);
         WorldGenVines worldgenvines = new WorldGenVines();
   
