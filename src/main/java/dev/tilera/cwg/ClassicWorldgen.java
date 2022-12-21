@@ -9,6 +9,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.tilera.cwg.caves.MapGenCavesSwiss;
 import dev.tilera.cwg.command.CommandChangeWorld;
 import net.minecraft.world.WorldType;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.InitMapGenEvent;
 
@@ -17,6 +18,7 @@ public class ClassicWorldgen {
 
     public static final WorldType CLASSIC = new WorldTypeClassic("onesix");
     public static WorldType USED = null;
+    public static BiomeGenBase[] biomeCache = new BiomeGenBase[256];
 
     @Mod.Instance
     public static ClassicWorldgen INSTANCE;

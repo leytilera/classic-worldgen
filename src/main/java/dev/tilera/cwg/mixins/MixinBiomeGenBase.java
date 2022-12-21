@@ -4,6 +4,9 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.At;
 
 import dev.tilera.cwg.ClassicWorldgen;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -17,6 +20,20 @@ public abstract class MixinBiomeGenBase {
     @Shadow
     @Final
     protected static NoiseGeneratorPerlin temperatureNoise;
+
+    @Inject(method = "<init>(IZ)V", at = @At("TAIL"))
+    public void constructorHead(int id, boolean register, CallbackInfo ci) {
+       if (register) {
+          if (ClassicWorldgen.biomeCache.length > id) {
+             BiomeGenBase self = (BiomeGenBase)(Object)this;
+             if (ClassicWorldgen.biomeCache[id] != null && ClassicWorldgen.biomeCache[id] != self) {
+               throw new RuntimeException("Biome ID conflict: " + id + " : " + self.biomeName + " : " + ClassicWorldgen.biomeCache[id].biomeName);
+             } else {
+                ClassicWorldgen.biomeCache[id] = self;
+             }
+          }
+       }
+    }
 
     /**
      * @author tilera
