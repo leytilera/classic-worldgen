@@ -17,7 +17,6 @@ import net.minecraftforge.event.terraingen.InitMapGenEvent;
 public class ClassicWorldgen {
 
     public static final WorldType CLASSIC = new WorldTypeClassic("onesix");
-    public static WorldType USED = null;
     public static BiomeGenBase[] biomeCache = new BiomeGenBase[256];
 
     @Mod.Instance
@@ -37,14 +36,13 @@ public class ClassicWorldgen {
 
     @SubscribeEvent
     public void onInitMapGen(InitMapGenEvent event) {
-        if (event.type == InitMapGenEvent.EventType.CAVE && (Config.enableSwissCheeseCaves || USED == CLASSIC)) {
+        if (event.type == InitMapGenEvent.EventType.CAVE && Config.enableSwissCheeseCaves) {
             event.newGen = new MapGenCavesSwiss();
         }
     }
 
     @EventHandler
     public void onServerLoad(FMLServerStartingEvent event) {
-        USED = event.getServer().getEntityWorld().getWorldInfo().getTerrainType();
         if (Config.changeWorldTypeCommand)
             event.registerServerCommand(new CommandChangeWorld());
     }
