@@ -15,6 +15,7 @@ public class Config {
     public static boolean disableNewFlowers = false;
     public static boolean classicExtremeHills = false;
     public static boolean disableHeightTemperature = false;
+    public static boolean enableFarlands = false;
 
     public static void initConfig() {
         conf = new Configuration(new File(Loader.instance().getConfigDir(), "ClassicWorldgen.cfg"));
@@ -26,6 +27,7 @@ public class Config {
         classicExtremeHills = conf.getBoolean("classicExtremeHills", "tweaks", classicExtremeHills, "generate 1.6 extreme hills instead of 1.7");
         disableHeightTemperature = conf.getBoolean("disableHeightTemperature", "tweaks", disableHeightTemperature, "disable snow on mountains");
         changeWorldTypeCommand = conf.getBoolean("changeTypeCommand", "commands", changeWorldTypeCommand, "enable command to change the WorldType");
+        enableFarlands = conf.getBoolean("enableFarlands", "tweaks", enableFarlands, "reenable the Farlands!");
         conf.save();
     }
 

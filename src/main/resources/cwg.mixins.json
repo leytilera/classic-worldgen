@@ -9,7 +9,9 @@
       "MixinBiomeGenHills", 
       "MixinBiomeGenPlains", 
       "MixinBiomeGenSwamp", 
-      "MixinGenDoublePlant"],
+      "MixinGenDoublePlant",
+      "MixinNoiseGeneratorOctaves"
+    ],
     "injectors": {
       "defaultRequire": 1
     }
