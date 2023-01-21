@@ -30,6 +30,7 @@ public class GenLayerBiomeClassic extends GenLayer {
         ArrayList<BiomeEntry> biomeEntries = new ArrayList<>();
 
         for (BiomeGenBase b : vanillaBiomes) {
+           if (Config.disableJungle && b == BiomeGenBase.jungle) continue;
            addedBiomes.add(b);
            biomeEntries.add(new BiomeEntry(b, 10));
         }
@@ -53,13 +54,15 @@ public class GenLayerBiomeClassic extends GenLayer {
            addedBiomes.add(BiomeGenBase.megaTaiga);
         }
 
-        for (BiomeType t : BiomeType.values()) {
-            ImmutableList<BiomeEntry> biomesToAdd = BiomeManager.getBiomes(t);
-            for (BiomeEntry biome : biomesToAdd) {
-                if ((biome.biome.biomeID < 40 && Config.blockNewVanillaBiomes) || addedBiomes.contains(biome.biome)) continue;
-                addedBiomes.add(biome.biome);
-                biomeEntries.add(biome);
-                if (biome.itemWeight != 10) hasBiomeWeights = true;
+        if (!Config.disableModdedBiomes) {
+            for (BiomeType t : BiomeType.values()) {
+               ImmutableList<BiomeEntry> biomesToAdd = BiomeManager.getBiomes(t);
+               for (BiomeEntry biome : biomesToAdd) {
+                  if ((biome.biome.biomeID < 40 && Config.blockNewVanillaBiomes) || addedBiomes.contains(biome.biome)) continue;
+                  addedBiomes.add(biome.biome);
+                  biomeEntries.add(biome);
+                  if (biome.itemWeight != 10) hasBiomeWeights = true;
+               }
             }
         }
         allowedBiomes = biomeEntries.toArray(new BiomeEntry[biomeEntries.size()]);
