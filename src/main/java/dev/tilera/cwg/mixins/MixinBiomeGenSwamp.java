@@ -5,7 +5,7 @@ import java.util.Random;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-import dev.tilera.cwg.Config;
+import dev.tilera.cwg.ClassicWorldgen;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenSwamp;
@@ -23,7 +23,7 @@ public abstract class MixinBiomeGenSwamp extends BiomeGenBase {
      */
     @Overwrite(remap = false)
     public String func_150572_a(Random p_150572_1_, int p_150572_2_, int p_150572_3_, int p_150572_4_) {
-        if (!Config.disableNewFlowers) {
+        if (!ClassicWorldgen.isClassicWorld()) {
             return BlockFlower.field_149859_a[1];
         }
         return super.func_150572_a(p_150572_1_, p_150572_2_, p_150572_3_, p_150572_4_);

@@ -34,7 +34,7 @@ public abstract class MixinBiomeGenJungle extends BiomeGenBase {
         }
   
         int i1 = p_76728_2_.nextInt(height);
-        if (p_76728_1_.getWorldInfo().getTerrainType() != ClassicWorldgen.CLASSIC)
+        if (!ClassicWorldgen.isClassicWorld(p_76728_1_))
             (new WorldGenMelon()).generate(p_76728_1_, p_76728_2_, k, i1, l);
         WorldGenVines worldgenvines = new WorldGenVines();
   

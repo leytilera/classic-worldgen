@@ -26,7 +26,7 @@ public abstract class MixinGenDoublePlant extends WorldGenerator{
     public boolean generate(World p_generate_1_, Random p_generate_2_, int p_generate_3_, int p_generate_4_, int p_generate_5_) {
         boolean var6 = false;
   
-        if (p_generate_1_.getWorldInfo().getTerrainType() != ClassicWorldgen.CLASSIC) {
+        if (!ClassicWorldgen.isClassicWorld(p_generate_1_)) {
             for(int var7 = 0; var7 < 64; ++var7) {
                 int var8 = p_generate_3_ + p_generate_2_.nextInt(8) - p_generate_2_.nextInt(8);
                 int var9 = p_generate_4_ + p_generate_2_.nextInt(4) - p_generate_2_.nextInt(4);

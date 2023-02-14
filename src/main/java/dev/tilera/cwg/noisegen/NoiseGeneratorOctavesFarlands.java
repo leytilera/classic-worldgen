@@ -1,28 +1,17 @@
-package dev.tilera.cwg.mixins;
+package dev.tilera.cwg.noisegen;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
+import java.util.Random;
 
-import dev.tilera.cwg.Config;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.gen.NoiseGenerator;
-import net.minecraft.world.gen.NoiseGeneratorImproved;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
 
-@Mixin(NoiseGeneratorOctaves.class)
-public abstract class MixinNoiseGeneratorOctaves extends NoiseGenerator {
-    
-    @Shadow
-    private NoiseGeneratorImproved[] generatorCollection;
-    @Shadow
-    private int octaves;
+public class NoiseGeneratorOctavesFarlands extends NoiseGeneratorOctaves {
 
-    /**
-     * @author tilera
-     * @reason farlands 
-     */
-    @Overwrite
+    public NoiseGeneratorOctavesFarlands(Random rand, int octaves) {
+        super(rand, octaves);
+    }
+
+    @Override
     public double[] generateNoiseOctaves(double[] p_76304_1_, int p_76304_2_, int p_76304_3_, int p_76304_4_, int p_76304_5_, int p_76304_6_, int p_76304_7_, double p_76304_8_, double p_76304_10_, double p_76304_12_) {
         if (p_76304_1_ == null)
         {
@@ -47,10 +36,6 @@ public abstract class MixinNoiseGeneratorOctaves extends NoiseGenerator {
             long j2 = MathHelper.floor_double_long(d5);
             d3 -= (double)i2;
             d5 -= (double)j2;
-            if (!Config.enableFarlands) {
-                i2 %= 16777216L;
-                j2 %= 16777216L;
-            }
             d3 += (double)i2;
             d5 += (double)j2;
             this.generatorCollection[l1].populateNoiseArray(p_76304_1_, d3, d4, d5, p_76304_5_, p_76304_6_, p_76304_7_, p_76304_8_ * d6, p_76304_10_ * d6, p_76304_12_ * d6, d6);
@@ -59,5 +44,5 @@ public abstract class MixinNoiseGeneratorOctaves extends NoiseGenerator {
 
         return p_76304_1_;
     }
-
+    
 }

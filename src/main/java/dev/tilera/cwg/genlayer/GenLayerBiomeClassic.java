@@ -52,13 +52,15 @@ public class GenLayerBiomeClassic extends GenLayer {
            addedBiomes.add(BiomeGenBase.savannaPlateau);
            biomeEntries.add(new BiomeEntry(BiomeGenBase.megaTaiga, 10));
            addedBiomes.add(BiomeGenBase.megaTaiga);
+           biomeEntries.add(new BiomeEntry(BiomeGenBase.icePlains, 10));
+           addedBiomes.add(BiomeGenBase.icePlains);
         }
 
         if (!Config.disableModdedBiomes) {
             for (BiomeType t : BiomeType.values()) {
                ImmutableList<BiomeEntry> biomesToAdd = BiomeManager.getBiomes(t);
                for (BiomeEntry biome : biomesToAdd) {
-                  if ((biome.biome.biomeID < 40 && Config.blockNewVanillaBiomes) || addedBiomes.contains(biome.biome)) continue;
+                  if (biome.biome.biomeID < 40 || addedBiomes.contains(biome.biome)) continue;
                   addedBiomes.add(biome.biome);
                   biomeEntries.add(biome);
                   if (biome.itemWeight != 10) hasBiomeWeights = true;
