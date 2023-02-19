@@ -1,6 +1,7 @@
 package dev.tilera.cwg;
 
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -9,7 +10,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.tilera.cwg.caves.MapGenCavesSwiss;
 import dev.tilera.cwg.command.CommandChangeWorld;
 import dev.tilera.cwg.noisegen.NoiseGeneratorOctavesFarlands;
-import net.minecraft.server.MinecraftServer;
+import dev.tilera.cwg.proxy.CommonProxy;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -27,6 +28,8 @@ public class ClassicWorldgen {
 
     @Mod.Instance
     public static ClassicWorldgen INSTANCE;
+    @SidedProxy(modId = Constants.ID, serverSide = "dev.tilera.cwg.proxy.CommonProxy", clientSide = "dev.tilera.cwg.proxy.ClientProxy")
+    public static CommonProxy proxy;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -70,9 +73,7 @@ public class ClassicWorldgen {
     }
 
     public static boolean isClassicWorld() {
-        World[] worlds = MinecraftServer.getServer().worldServers;
-        if (worlds.length == 0) return true;
-        World world = worlds[0];
+        World world = proxy.getWorld();
         if (world == null) return true;
         return isClassicWorld(world);
     }
