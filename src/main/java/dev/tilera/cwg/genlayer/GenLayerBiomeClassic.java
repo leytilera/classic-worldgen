@@ -6,9 +6,8 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 
-import dev.tilera.cwg.Config;
+import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import net.minecraft.util.WeightedRandom;
-import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.IntCache;
@@ -21,7 +20,7 @@ public class GenLayerBiomeClassic extends GenLayer {
     private BiomeEntry[] allowedBiomes;
     private boolean hasBiomeWeights;
 
-    public GenLayerBiomeClassic(long arg0, GenLayer parent, WorldType type) {
+    public GenLayerBiomeClassic(long arg0, GenLayer parent, IGeneratorOptionProvider options) {
         super(arg0);
         super.parent = parent;
         hasBiomeWeights = false;
@@ -30,12 +29,12 @@ public class GenLayerBiomeClassic extends GenLayer {
         ArrayList<BiomeEntry> biomeEntries = new ArrayList<>();
 
         for (BiomeGenBase b : vanillaBiomes) {
-           if (Config.disableJungle && b == BiomeGenBase.jungle) continue;
+           if (options.getBoolean("cwg:generator.classic:disableJungle") && b == BiomeGenBase.jungle) continue;
            addedBiomes.add(b);
            biomeEntries.add(new BiomeEntry(b, 10));
         }
 
-        if (Config.addNewVanillaBiomes) {
+        if (options.getBoolean("cwg:generator.classic:newVanillaBiomes")) {
            biomeEntries.add(new BiomeEntry(BiomeGenBase.birchForest, 10));
            addedBiomes.add(BiomeGenBase.birchForest);
            biomeEntries.add(new BiomeEntry(BiomeGenBase.taiga, 10));
@@ -56,7 +55,7 @@ public class GenLayerBiomeClassic extends GenLayer {
            addedBiomes.add(BiomeGenBase.icePlains);
         }
 
-        if (!Config.disableModdedBiomes) {
+        if (!options.getBoolean("cwg:generator.classic:disableModdedBiomes")) {
             for (BiomeType t : BiomeType.values()) {
                ImmutableList<BiomeEntry> biomesToAdd = BiomeManager.getBiomes(t);
                for (BiomeEntry biome : biomesToAdd) {

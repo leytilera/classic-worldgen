@@ -1,5 +1,8 @@
 package dev.tilera.cwg;
 
+import dev.tilera.cwg.api.generator.AbstractChunkManager;
+import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
+import dev.tilera.cwg.api.options.IOption;
 import dev.tilera.cwg.genlayer.GenLayerAddIslandClassic;
 import dev.tilera.cwg.genlayer.GenLayerAddSnowClassic;
 import dev.tilera.cwg.genlayer.GenLayerBiomeClassic;
@@ -17,22 +20,27 @@ import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.WorldChunkManager;
+import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.GenLayerAddMushroomIsland;
 import net.minecraft.world.gen.layer.GenLayerIsland;
 import net.minecraft.world.gen.layer.GenLayerSmooth;
 
-public class WorldChunkManagerClassic extends WorldChunkManager {
+public class WorldChunkManagerClassic extends AbstractChunkManager{
+
+   private IGeneratorOptionProvider provider = null;
     
-    public WorldChunkManagerClassic(World world) {
+    public WorldChunkManagerClassic(World world, IGeneratorOptionProvider provider) {
         super();
+        this.provider = provider;
         GenLayer[] agenlayer = initializeAllBiomeGenerators(world.getSeed(), world.getWorldInfo().getTerrainType());
         agenlayer = getModdedBiomeGenerators(world.getWorldInfo().getTerrainType(), world.getSeed(), agenlayer);
         ObfuscationReflectionHelper.setPrivateValue(WorldChunkManager.class, this, agenlayer[0], "genBiomes", "field_76944_d");
         ObfuscationReflectionHelper.setPrivateValue(WorldChunkManager.class, this, agenlayer[1], "biomeIndexLayer", "field_76945_e");
     }
 
-    public static GenLayer[] initializeAllBiomeGenerators(long p_75901_0_, WorldType p_75901_2_) {
+    public GenLayer[] initializeAllBiomeGenerators(long p_75901_0_, WorldType p_75901_2_) {
+      assert this.provider != null;
         GenLayerIsland genlayerisland = new GenLayerIsland(1L);
         GenLayerFuzzyZoomClassic genlayerfuzzyzoom = new GenLayerFuzzyZoomClassic(2000L, genlayerisland);
         GenLayerAddIslandClassic genlayeraddisland = new GenLayerAddIslandClassic(1L, genlayerfuzzyzoom);
@@ -56,7 +64,7 @@ public class WorldChunkManagerClassic extends WorldChunkManager {
         GenLayerRiverClassic genlayerriver = new GenLayerRiverClassic(1L, genlayer);
         GenLayerSmooth genlayersmooth = new GenLayerSmooth(1000L, genlayerriver);
         GenLayer genlayer1 = GenLayerZoomClassic.magnify(1000L, genlayeraddmushroomisland, 0);
-        GenLayerBiomeClassic genlayerbiome = new GenLayerBiomeClassic(200L, genlayer1, p_75901_2_);
+        GenLayerBiomeClassic genlayerbiome = new GenLayerBiomeClassic(200L, genlayer1, this.provider);
         genlayer1 = GenLayerZoomClassic.magnify(1000L, genlayerbiome, 2);
         GenLayer object = new GenLayerHillsClassic(1000L, genlayer1);
   
@@ -82,5 +90,15 @@ public class WorldChunkManagerClassic extends WorldChunkManager {
         genlayervoronoizoom.initWorldGenSeed(p_75901_0_);
         return new GenLayer[]{genlayerrivermix, genlayervoronoizoom, genlayerrivermix};
     }
+
+   @Override
+   public IChunkProvider getGenerator(World world) {
+      return new ChunkProviderClassic(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled());
+   }
+
+   @Override
+   public IGeneratorOptionProvider getOptionProvider() {
+      return this.provider;
+   }   
 
 }

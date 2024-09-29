@@ -9,7 +9,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.At;
 
 import dev.tilera.cwg.ClassicWorldgen;
-import dev.tilera.cwg.Config;
+import dev.tilera.cwg.api.CwgGlobals;
+import dev.tilera.cwg.api.hooks.IHookProvider;
+import dev.tilera.cwg.hooks.ITemperatureHook;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.NoiseGeneratorPerlin;
 
@@ -40,14 +42,10 @@ public abstract class MixinBiomeGenBase {
      * @author tilera
      * @reason No snow on hills
      */
-    @Overwrite
+    @Overwrite(remap = false)
     public float getFloatTemperature(int p_150564_1_, int p_150564_2_, int p_150564_3_) {
-        if (p_150564_2_ > 64 && !(ClassicWorldgen.isClassicWorld() || Config.classicExtremeHills)) {
-           float f = (float)temperatureNoise.func_151601_a((double)p_150564_1_ * 1.0D / 8.0D, (double)p_150564_3_ * 1.0D / 8.0D) * 4.0F;
-           return this.temperature - (f + (float)p_150564_2_ - 64.0F) * 0.05F / 30.0F;
-        } else {
-           return this.temperature;
-        }
+        ITemperatureHook hook = CwgGlobals.getOptionProvider().getValue("cwg:temperature_hook", IHookProvider.class).getHook(ITemperatureHook.class);
+        return hook.getFloatTemperature(CwgGlobals.getCurrentState(), p_150564_1_, p_150564_2_, p_150564_3_, this.temperature, temperatureNoise);
      }
     
 }

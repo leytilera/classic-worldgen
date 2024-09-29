@@ -6,8 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import dev.tilera.cwg.ClassicWorldgen;
-import dev.tilera.cwg.Config;
+import dev.tilera.cwg.api.CwgGlobals;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
@@ -38,7 +37,7 @@ public abstract class MixinBiomeGenHills extends BiomeGenBase {
      */
     @Overwrite(remap = false)
     public WorldGenAbstractTree func_150567_a(Random p_150567_1_) {
-        if (Config.classicExtremeHills)
+        if (CwgGlobals.getOptionProvider().getBoolean("cwg:classic_extreme_hills"))
             return super.func_150567_a(p_150567_1_);
         else
             return (WorldGenAbstractTree)(p_150567_1_.nextInt(3) > 0 ? this.field_150634_aD : super.func_150567_a(p_150567_1_));
@@ -50,7 +49,7 @@ public abstract class MixinBiomeGenHills extends BiomeGenBase {
      */
     @Overwrite(remap = false)
     public void genTerrainBlocks(World p_150573_1_, Random p_150573_2_, Block[] p_150573_3_, byte[] p_150573_4_, int p_150573_5_, int p_150573_6_, double p_150573_7_) {
-        if (ClassicWorldgen.isClassicWorld(p_150573_1_) || Config.classicExtremeHills) {
+        if (CwgGlobals.getOptionProvider(p_150573_1_).getBoolean("cwg:classic_extreme_hills")) {
             super.genTerrainBlocks(p_150573_1_, p_150573_2_, p_150573_3_, p_150573_4_, p_150573_5_, p_150573_6_, p_150573_7_);
         } else {
             this.topBlock = Blocks.grass;

@@ -9,7 +9,8 @@
       "MixinBiomeGenHills", 
       "MixinBiomeGenPlains", 
       "MixinBiomeGenSwamp", 
-      "MixinGenDoublePlant"
+      "MixinGenDoublePlant",
+      "MixinChunkProviderServer"
     ],
     "injectors": {
       "defaultRequire": 1
