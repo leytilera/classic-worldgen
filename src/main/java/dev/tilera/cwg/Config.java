@@ -16,6 +16,7 @@ public class Config {
     public static boolean disableJungle = false;
     public static boolean disableModdedBiomes = false;
     public static boolean enableDesertLakes = true;
+    public static boolean enableModdedWorldgen = true;
 
     public static void initConfig() {
         conf = new Configuration(new File(Loader.instance().getConfigDir(), "ClassicWorldgen.cfg"));
@@ -28,6 +29,7 @@ public class Config {
         disableJungle = conf.getBoolean("disableJungle", "worldgen", disableJungle, "prevent jungle biomes from generating in classic worldgen");
         disableModdedBiomes = conf.getBoolean("disableModdedBiomes", "worldgen", disableModdedBiomes, "prevent modded biomes from generating in classic worldgen");
         enableDesertLakes = conf.getBoolean("enableDesertLakes", "worldgen", enableDesertLakes, "enable lakes in desert in classic worldgen");
+        enableModdedWorldgen = conf.getBoolean("enableModdedWorldgen", "worldgen", enableModdedWorldgen, "enable worldgen features from other mods");
         conf.save();
     }
 

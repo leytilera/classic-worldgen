@@ -36,6 +36,7 @@ public class ConfigProvider implements IGeneratorOptionProvider {
             case "cwg:generator.classic:disableJungle": return Config.disableJungle;
             case "cwg:generator.classic:newVanillaBiomes": return Config.addNewVanillaBiomes;
             case "cwg:generator.classic:disableModdedBiomes": return Config.addNewVanillaBiomes;
+            case "cwg:generator.classic:enableModdedWorldgen": return Config.enableModdedWorldgen;
             default: return parent.getBoolean(id);
         }
     }
