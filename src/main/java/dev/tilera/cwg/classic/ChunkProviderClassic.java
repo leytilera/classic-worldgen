@@ -1,4 +1,4 @@
-package dev.tilera.cwg;
+package dev.tilera.cwg.classic;
 
 import dev.tilera.cwg.api.CwgGlobals;
 import net.minecraft.block.BlockFalling;

@@ -11,6 +11,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.hooks.IHookProvider;
 import dev.tilera.cwg.api.utils.BooleanOption;
+import dev.tilera.cwg.classic.ClassicChunkManagerFactory;
 import dev.tilera.cwg.command.CommandChangeWorld;
 import dev.tilera.cwg.hooks.DefaultCavegenHook;
 import dev.tilera.cwg.hooks.DefaultTemperatureHook;

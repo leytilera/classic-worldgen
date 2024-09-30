@@ -3,6 +3,8 @@ package dev.tilera.cwg;
 import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.generator.AbstractChunkManager;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
+import dev.tilera.cwg.classic.ClassicChunkManagerFactory;
+import dev.tilera.cwg.classic.WorldChunkManagerClassic;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.WorldChunkManager;
