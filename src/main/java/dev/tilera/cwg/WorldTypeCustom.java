@@ -41,13 +41,17 @@ public class WorldTypeCustom extends WorldType implements IGeneratorOptionRegist
     public WorldChunkManager getChunkManager(World world) {
         String opts = world.getWorldInfo().getGeneratorOptions();
         IGeneratorOptionProvider options;
-        try {
-            options = decodeOptions(opts);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (opts.isEmpty()) {
             options = this;
+        } else {
+            try {
+                options = decodeOptions(opts);
+            } catch (Exception e) {
+                e.printStackTrace();
+                options = this;
+            }
         }
-        AbstractChunkManager manager = options.getValue("cwg:generator", IChunkManagerFactory.class).createChunkManager(ClassicWorldgen.CONFIG, world);
+        AbstractChunkManager manager = options.getValue("cwg:generator", IChunkManagerFactory.class).createChunkManager(options, world);
         CwgGlobals.setCurrentState(world);
         return manager;
     }
@@ -179,6 +183,27 @@ public class WorldTypeCustom extends WorldType implements IGeneratorOptionRegist
     @Override
     public List<IChunkManagerFactory> getChunkManagers() {
         return chunkManagerRegistry.values().stream().collect(Collectors.toList());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> IOption<T> getOption(String id, Class<T> type) {
+        IOption<?> opt = optionRegistry.get(id);
+        if (opt != null && opt.getType() == type) {
+            return (IOption<T>) optionRegistry.get(id);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Class<?> getOptionType(String id) {
+        IOption<?> opt = optionRegistry.get(id);
+        if (opt != null) {
+            return opt.getType();
+        } else {
+            return null;
+        }
     }
 
 }

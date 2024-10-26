@@ -14,4 +14,8 @@ public interface IGeneratorOptionRegistry extends IGeneratorOptionProvider {
 
    <T> boolean isRegistered(String id, Class<T> type);
 
+   <T> IOption<T> getOption(String id, Class<T> type);
+
+   Class<?> getOptionType(String id);
+
 }

@@ -9,11 +9,17 @@ public class StringOption implements IOption<String> {
     private String id;
     private String displayName;
     private String defaultValue;
+    private boolean isInternal = false;
 
     public StringOption(String id, String displayName, String defaultValue) {
         this.id = id;
         this.displayName = displayName;
         this.defaultValue = defaultValue;
+    }
+
+    public StringOption(String id, String displayName, String defaultValue, boolean isInternal) {
+        this(id, displayName, defaultValue);
+        this.isInternal = isInternal;
     }
 
     @Override
@@ -58,7 +64,7 @@ public class StringOption implements IOption<String> {
 
     @Override
     public Type getOptionType() {
-        return Type.STRING;
+        return isInternal ? Type.INTERNAL : Type.STRING;
     }
 
     

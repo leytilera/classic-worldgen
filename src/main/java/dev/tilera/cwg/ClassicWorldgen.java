@@ -11,8 +11,12 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.hooks.IHookProvider;
 import dev.tilera.cwg.api.utils.BooleanOption;
+import dev.tilera.cwg.api.utils.IntOption;
+import dev.tilera.cwg.api.utils.StringOption;
 import dev.tilera.cwg.classic.ClassicChunkManagerFactory;
 import dev.tilera.cwg.command.CommandChangeWorld;
+import dev.tilera.cwg.dimensions.CustomDimensions;
+import dev.tilera.cwg.dimensions.DimProvider;
 import dev.tilera.cwg.hooks.DefaultCavegenHook;
 import dev.tilera.cwg.hooks.DefaultTemperatureHook;
 import dev.tilera.cwg.hooks.HookOption;
@@ -23,10 +27,12 @@ import dev.tilera.cwg.noisegen.NoiseGeneratorOctavesFarlands;
 import dev.tilera.cwg.options.ChunkManagerOption;
 import dev.tilera.cwg.options.ConfigProvider;
 import dev.tilera.cwg.proxy.CommonProxy;
+import dev.tilera.cwg.vanilla.SingleBiomeChunkManagerFactory;
 import dev.tilera.cwg.vanilla.VanillaChunkManagerFactory;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.NoiseGenerator;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.event.terraingen.InitNoiseGensEvent;
@@ -47,6 +53,7 @@ public class ClassicWorldgen {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         Config.initConfig();
+        CustomDimensions.INSTANCE = new CustomDimensions(CUSTOM);
         CwgGlobals.setOptionRegistry(CUSTOM);
         CwgGlobals.setDefaultProvider(CONFIG);
         CwgGlobals.setGeneratorRegistry(CUSTOM);
@@ -62,6 +69,9 @@ public class ClassicWorldgen {
         registerGenerators();
         registerOptions();
         registerHooks();
+        DimensionManager.registerProviderType(Config.dimensionProviderID, DimProvider.class, false);
+        CustomDimensions.INSTANCE.readConfig(Config.dimensionsDefinition);
+        CustomDimensions.INSTANCE.registerDimensions();
     }
 
     public void registerOptions() {
@@ -75,6 +85,9 @@ public class ClassicWorldgen {
         CwgGlobals.getOptionRegistry().registerOption(new BooleanOption("cwg:disable_jungle_melons", "Disable Jungle Melons", false));
         CwgGlobals.getOptionRegistry().registerOption(new BooleanOption("cwg:disable_new_flowers", "Disable new Flowers", false));
         CwgGlobals.getOptionRegistry().registerOption(new BooleanOption("cwg:disable_tall_flowers", "Disable Tall Flowers", false));
+        CwgGlobals.getOptionRegistry().registerOption(new StringOption("cwg:dimensions:name", "Dimension Name", "Custom Dimension", true));
+        CwgGlobals.getOptionRegistry().registerOption(new IntOption("cwg:dimensions:provider", "Provider ID", Config.dimensionProviderID, true, false));
+        CwgGlobals.getOptionRegistry().registerOption(new IntOption("cwg:generator.singleBiome:biomeID", "Biome ID", 0, false, true));
     }
 
     public void registerHooks() {
@@ -91,6 +104,7 @@ public class ClassicWorldgen {
         VanillaChunkManagerFactory def = new VanillaChunkManagerFactory();
         CwgGlobals.getGeneratorRegistry().registerChunkManager(def);
         CwgGlobals.getGeneratorRegistry().registerChunkManager(new ClassicChunkManagerFactory());
+        CwgGlobals.getGeneratorRegistry().registerChunkManager(new SingleBiomeChunkManagerFactory());
         CwgGlobals.getOptionRegistry().registerOption(new ChunkManagerOption(
             "cwg:generator", 
             "Generator",
