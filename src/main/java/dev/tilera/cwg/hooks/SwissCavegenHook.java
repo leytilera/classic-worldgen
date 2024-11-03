@@ -8,7 +8,6 @@ public class SwissCavegenHook implements ICavegenHook {
 
     @Override
     public MapGenBase createCaveGenerator() {
-        System.out.println("ALECALECALEC");
         return new MapGenCavesSwiss();
     }
 

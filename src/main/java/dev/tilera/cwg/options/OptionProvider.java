@@ -4,14 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
-import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 
 public class OptionProvider implements IGeneratorOptionProvider {
 
-    private IGeneratorOptionRegistry registry;
+    private IGeneratorOptionProvider registry;
     private Map<String, Object> storage = new HashMap<>();
 
-    public OptionProvider(IGeneratorOptionRegistry registry) {
+    public OptionProvider(IGeneratorOptionProvider registry) {
         this.registry = registry;
     }
 

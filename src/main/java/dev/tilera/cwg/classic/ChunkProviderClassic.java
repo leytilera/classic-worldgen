@@ -1,6 +1,8 @@
 package dev.tilera.cwg.classic;
 
-import dev.tilera.cwg.api.CwgGlobals;
+import dev.tilera.cwg.api.hooks.IHookProvider;
+import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
+import dev.tilera.cwg.hooks.ICavegenHook;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.SpawnerAnimals;
@@ -17,8 +19,13 @@ import net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType
 
 public class ChunkProviderClassic extends ChunkProviderGenerate {
 
-    public ChunkProviderClassic(World world, long seed, boolean features) {
+    private IGeneratorOptionProvider options;
+
+    public ChunkProviderClassic(World world, long seed, boolean features, IGeneratorOptionProvider options) {
         super(world, seed, features);
+        this.options = options;
+        ICavegenHook hook = options.getValue("cwg:cavegen_hook", IHookProvider.class).getHook(ICavegenHook.class);
+        hook.setCavegen(this);
     }
 
     @Override
@@ -33,7 +40,7 @@ public class ChunkProviderClassic extends ChunkProviderGenerate {
         this.rand.setSeed((long)p_73153_2_ * i1 + (long)p_73153_3_ * j1 ^ this.worldObj.getSeed());
         boolean flag = false;
 
-        if (CwgGlobals.getOptionProvider(worldObj).getBoolean("cwg:generator.classic:enableModdedWorldgen")) {
+        if (options.getBoolean("cwg:generator.classic:enableModdedWorldgen")) {
             MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Pre(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag));
         }
 
@@ -70,7 +77,7 @@ public class ChunkProviderClassic extends ChunkProviderGenerate {
             }
         }
 
-        boolean doGen = !CwgGlobals.getOptionProvider(worldObj).getBoolean("cwg:generator.classic:enableModdedWorldgen") || TerrainGen.populate(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag, EventType.DUNGEON);
+        boolean doGen = !options.getBoolean("cwg:generator.classic:enableModdedWorldgen") || TerrainGen.populate(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag, EventType.DUNGEON);
         for (k1 = 0; doGen && k1 < 8; ++k1)
         {
             l1 = k + this.rand.nextInt(16) + 8;
@@ -106,7 +113,7 @@ public class ChunkProviderClassic extends ChunkProviderGenerate {
             }
         }
 
-        if (CwgGlobals.getOptionProvider(worldObj).getBoolean("cwg:generator.classic:enableModdedWorldgen")) {
+        if (options.getBoolean("cwg:generator.classic:enableModdedWorldgen")) {
             MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag));
         }
 
@@ -114,7 +121,7 @@ public class ChunkProviderClassic extends ChunkProviderGenerate {
     }
 
     public boolean hasDesertLakes() {
-        return CwgGlobals.getOptionProvider(worldObj).getBoolean("cwg:classic_extreme_hills");
+        return options.getBoolean("cwg:classic_extreme_hills");
     }
     
 }

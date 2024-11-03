@@ -2,7 +2,6 @@ package dev.tilera.cwg.classic;
 
 import dev.tilera.cwg.api.generator.AbstractChunkManager;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
-import dev.tilera.cwg.api.options.IOption;
 import dev.tilera.cwg.genlayer.GenLayerAddIslandClassic;
 import dev.tilera.cwg.genlayer.GenLayerAddSnowClassic;
 import dev.tilera.cwg.genlayer.GenLayerBiomeClassic;
@@ -93,7 +92,7 @@ public class WorldChunkManagerClassic extends AbstractChunkManager{
 
    @Override
    public IChunkProvider getGenerator(World world) {
-      return new ChunkProviderClassic(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled());
+      return new ChunkProviderClassic(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), provider);
    }
 
    @Override
