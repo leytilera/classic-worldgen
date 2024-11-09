@@ -10,6 +10,7 @@ import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.hooks.IHookProvider;
+import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.api.utils.BooleanOption;
 import dev.tilera.cwg.api.utils.IntOption;
 import dev.tilera.cwg.api.utils.StringOption;
@@ -26,6 +27,8 @@ import dev.tilera.cwg.hooks.SwissCavegenHook;
 import dev.tilera.cwg.noisegen.NoiseGeneratorOctavesFarlands;
 import dev.tilera.cwg.options.ChunkManagerOption;
 import dev.tilera.cwg.options.ConfigProvider;
+import dev.tilera.cwg.options.GeneratorRegistry;
+import dev.tilera.cwg.options.OptionRegistry;
 import dev.tilera.cwg.proxy.CommonProxy;
 import dev.tilera.cwg.vanilla.SingleBiomeChunkManagerFactory;
 import dev.tilera.cwg.vanilla.VanillaChunkManagerFactory;
@@ -42,7 +45,7 @@ public class ClassicWorldgen {
 
     public static final WorldTypeCustom CUSTOM = new WorldTypeCustom();
     public static final WorldTypeClassic CLASSIC = new WorldTypeClassic();
-    public static final ConfigProvider CONFIG = new ConfigProvider(CUSTOM);
+    public static ConfigProvider CONFIG;
     public static BiomeGenBase[] biomeCache = new BiomeGenBase[256];
 
     @Mod.Instance
@@ -53,10 +56,12 @@ public class ClassicWorldgen {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         Config.initConfig();
-        CustomDimensions.INSTANCE = new CustomDimensions(CUSTOM);
-        CwgGlobals.setOptionRegistry(CUSTOM);
+        IGeneratorOptionRegistry optionRegistry = new OptionRegistry();
+        CONFIG = new ConfigProvider(optionRegistry);
+        CustomDimensions.INSTANCE = new CustomDimensions(optionRegistry);
+        CwgGlobals.setOptionRegistry(optionRegistry);
         CwgGlobals.setDefaultProvider(CONFIG);
-        CwgGlobals.setGeneratorRegistry(CUSTOM);
+        CwgGlobals.setGeneratorRegistry(new GeneratorRegistry());
         CwgGlobals.setHookRegistry(new HookRegistry());
         CwgGlobals.setCurrentState(null);
     }

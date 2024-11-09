@@ -14,4 +14,6 @@ public interface IChunkManagerFactory {
     
     boolean hasSpecificOption(IOption<?> option);
 
+    default void onRegister() {}
+
 }
