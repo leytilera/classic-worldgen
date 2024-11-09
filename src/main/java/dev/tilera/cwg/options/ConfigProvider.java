@@ -3,6 +3,7 @@ package dev.tilera.cwg.options;
 import dev.tilera.cwg.Config;
 import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
+import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 
 public class ConfigProvider implements IGeneratorOptionProvider {
 
@@ -48,6 +49,11 @@ public class ConfigProvider implements IGeneratorOptionProvider {
             return (T) CwgGlobals.getHookRegistry().getHookProvider("cwg:swiss_cavegen");
         }
         return parent.getValue(id, type);
+    }
+
+    @Override
+    public IGeneratorOptionRegistry getRegistry() {
+        return parent.getRegistry();
     }
     
 }

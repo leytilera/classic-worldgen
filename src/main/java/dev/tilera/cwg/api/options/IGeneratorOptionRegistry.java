@@ -18,4 +18,9 @@ public interface IGeneratorOptionRegistry extends IGeneratorOptionProvider {
 
    Class<?> getOptionType(String id);
 
+   @Override
+   default IGeneratorOptionRegistry getRegistry() {
+      return this;
+   }
+
 }

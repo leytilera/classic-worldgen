@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
+import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 
 public class OptionProvider implements IGeneratorOptionProvider {
 
@@ -78,6 +79,11 @@ public class OptionProvider implements IGeneratorOptionProvider {
 
     public void putValue(String id, Object value) {
         storage.put(id, value);
+    }
+
+    @Override
+    public IGeneratorOptionRegistry getRegistry() {
+        return registry.getRegistry();
     }
     
 }
