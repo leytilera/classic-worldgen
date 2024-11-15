@@ -70,5 +70,10 @@ public class ChunkManagerOption implements IOption<IChunkManagerFactory> {
     public Type getOptionType() {
         return Type.ENUM;
     }
+
+    public ChunkManagerOption registerDefault() {
+        registry.registerChunkManager(defaultValue);
+        return this;
+    }
     
 }

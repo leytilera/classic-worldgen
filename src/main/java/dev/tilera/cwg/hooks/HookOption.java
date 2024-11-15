@@ -62,5 +62,10 @@ public class HookOption implements IOption<IHookProvider> {
     public String toRepresentation(IHookProvider obj) {
         return obj.getID();
     }
+
+    public HookOption registerDefault() {
+        registry.registerHookProvider(defaultProvider);
+        return this;
+    }
     
 }

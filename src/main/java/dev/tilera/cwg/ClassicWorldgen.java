@@ -96,26 +96,25 @@ public class ClassicWorldgen {
     }
 
     public void registerHooks() {
-        IHookProvider tempDef = new DefaultTemperatureHook();
-        CwgGlobals.getHookRegistry().registerHookProvider(tempDef);
-        CwgGlobals.getOptionRegistry().registerOption(new HookOption("cwg:temperature_hook", tempDef, CwgGlobals.getHookRegistry()));
-        IHookProvider caveDef = new DefaultCavegenHook();
-        CwgGlobals.getHookRegistry().registerHookProvider(caveDef);
+        CwgGlobals.getOptionRegistry().registerOption(
+            new HookOption("cwg:temperature_hook", new DefaultTemperatureHook(), CwgGlobals.getHookRegistry()).registerDefault()
+            );
+        CwgGlobals.getOptionRegistry().registerOption(
+            new HookOption("cwg:cavegen_hook", new DefaultCavegenHook(), CwgGlobals.getHookRegistry()).registerDefault()
+            );
         CwgGlobals.getHookRegistry().registerHookProvider(new SwissCavegenHook());
-        CwgGlobals.getOptionRegistry().registerOption(new HookOption("cwg:cavegen_hook", caveDef, CwgGlobals.getHookRegistry()));
+        
     }
 
     public void registerGenerators() {
-        VanillaChunkManagerFactory def = new VanillaChunkManagerFactory();
-        CwgGlobals.getGeneratorRegistry().registerChunkManager(def);
-        CwgGlobals.getGeneratorRegistry().registerChunkManager(new ClassicChunkManagerFactory());
-        CwgGlobals.getGeneratorRegistry().registerChunkManager(new SingleBiomeChunkManagerFactory());
         CwgGlobals.getOptionRegistry().registerOption(new ChunkManagerOption(
             "cwg:generator", 
             "Generator",
-            def,
+            new VanillaChunkManagerFactory(),
             CwgGlobals.getGeneratorRegistry()
-        ));
+        ).registerDefault());
+        CwgGlobals.getGeneratorRegistry().registerChunkManager(new ClassicChunkManagerFactory());
+        CwgGlobals.getGeneratorRegistry().registerChunkManager(new SingleBiomeChunkManagerFactory());
     }
 
     @SubscribeEvent
