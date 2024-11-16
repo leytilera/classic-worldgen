@@ -10,6 +10,7 @@ public class StringOption implements IOption<String> {
     private String displayName;
     private String defaultValue;
     private boolean isInternal = false;
+    private boolean generatorSpecific = false;
 
     public StringOption(String id, String displayName, String defaultValue) {
         this.id = id;
@@ -17,9 +18,10 @@ public class StringOption implements IOption<String> {
         this.defaultValue = defaultValue;
     }
 
-    public StringOption(String id, String displayName, String defaultValue, boolean isInternal) {
+    public StringOption(String id, String displayName, String defaultValue, boolean isInternal, boolean generatorSpecific) {
         this(id, displayName, defaultValue);
         this.isInternal = isInternal;
+        this.generatorSpecific = generatorSpecific;
     }
 
     @Override
@@ -67,5 +69,10 @@ public class StringOption implements IOption<String> {
         return isInternal ? Type.INTERNAL : Type.STRING;
     }
 
+    @Override
+    public boolean isGeneratorSpecific() {
+        return generatorSpecific;
+    }
+    
     
 }

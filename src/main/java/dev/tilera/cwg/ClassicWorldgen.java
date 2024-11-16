@@ -34,6 +34,7 @@ import dev.tilera.cwg.options.OptionRegistry;
 import dev.tilera.cwg.proxy.CommonProxy;
 import dev.tilera.cwg.vanilla.SingleBiomeChunkManagerFactory;
 import dev.tilera.cwg.vanilla.VanillaChunkManagerFactory;
+import dev.tilera.cwg.worldtypes.WorldtypeChunkManagerFactory;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.NoiseGenerator;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
@@ -93,7 +94,7 @@ public class ClassicWorldgen {
         CwgGlobals.getOptionRegistry().registerOption(new BooleanOption("cwg:disable_jungle_melons", "Disable Jungle Melons", false));
         CwgGlobals.getOptionRegistry().registerOption(new BooleanOption("cwg:disable_new_flowers", "Disable new Flowers", false));
         CwgGlobals.getOptionRegistry().registerOption(new BooleanOption("cwg:disable_tall_flowers", "Disable Tall Flowers", false));
-        CwgGlobals.getOptionRegistry().registerOption(new StringOption("cwg:dimensions:name", "Dimension Name", "Custom Dimension", true));
+        CwgGlobals.getOptionRegistry().registerOption(new StringOption("cwg:dimensions:name", "Dimension Name", "Custom Dimension", true, false));
         CwgGlobals.getOptionRegistry().registerOption(new IntOption("cwg:dimensions:provider", "Provider ID", Config.dimensionProviderID, true, false));
         CwgGlobals.getOptionRegistry().registerOption(new IntOption("cwg:generator.singleBiome:biomeID", "Biome ID", 0, false, true));
     }
@@ -119,6 +120,7 @@ public class ClassicWorldgen {
         CwgGlobals.getGeneratorRegistry().registerChunkManager(new ClassicChunkManagerFactory());
         CwgGlobals.getGeneratorRegistry().registerChunkManager(new SingleBiomeChunkManagerFactory());
         CwgGlobals.getGeneratorRegistry().registerChunkManager(new InfdevChunkManagerFactory());
+        CwgGlobals.getGeneratorRegistry().registerChunkManager(new WorldtypeChunkManagerFactory());
     }
 
     @SubscribeEvent
