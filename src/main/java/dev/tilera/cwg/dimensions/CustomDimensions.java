@@ -14,11 +14,17 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
+import dev.tilera.cwg.Config;
+import dev.tilera.cwg.api.generator.IChunkManagerRegistry;
+import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
+import dev.tilera.cwg.api.utils.IntOption;
+import dev.tilera.cwg.api.utils.StringOption;
+import dev.tilera.cwg.modules.IModule;
 import net.minecraftforge.common.DimensionManager;
 
-public class CustomDimensions {
+public class CustomDimensions implements IModule {
 
     public static CustomDimensions INSTANCE;
     private Gson gson = new GsonBuilder().create();
@@ -84,5 +90,17 @@ public class CustomDimensions {
         }
         return registry.decodeOptions(encodedJson);
     }
+
+    @Override
+    public void registerGenerators(IChunkManagerRegistry registry) {}
+
+    @Override
+    public void registerOptions(IGeneratorOptionRegistry registry) {
+        registry.registerOption(new StringOption("cwg:dimensions:name", "Dimension Name", "Custom Dimension", true, false));
+        registry.registerOption(new IntOption("cwg:dimensions:provider", "Provider ID", Config.dimensionProviderID, true, false));
+    }
+
+    @Override
+    public void registerHooks(IHookRegistry registry) {}
     
 }

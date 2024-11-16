@@ -15,7 +15,6 @@ public class GeneratorRegistry implements IChunkManagerRegistry {
     @Override
     public void registerChunkManager(IChunkManagerFactory factory) {
         registry.put(factory.getID(), factory);
-        factory.onRegister();
     }
 
     @Override

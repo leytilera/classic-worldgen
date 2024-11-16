@@ -1,13 +1,11 @@
 package dev.tilera.cwg.worldtypes;
 
 import dev.tilera.cwg.DelegateChunkManager;
-import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.generator.AbstractChunkManager;
 import dev.tilera.cwg.api.generator.IChunkManagerFactory;
 import dev.tilera.cwg.api.hooks.IHookProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IOption;
-import dev.tilera.cwg.api.utils.StringOption;
 import dev.tilera.cwg.hooks.ICavegenHook;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
@@ -53,12 +51,6 @@ public class WorldtypeChunkManagerFactory implements IChunkManagerFactory {
         world.getWorldInfo().generatorOptions = generatorOptions;
         world.getWorldInfo().terrainType = worldType;
         return temp;
-    }
-
-    @Override
-    public void onRegister() {
-        CwgGlobals.getOptionRegistry().registerOption(new WorldTypeOption());
-        CwgGlobals.getOptionRegistry().registerOption(new StringOption("cwg:generator.worldtype:options", "Worldtype Generator Options", "", false, true));
     }
 
 }
