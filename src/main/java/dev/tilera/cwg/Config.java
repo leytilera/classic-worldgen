@@ -19,6 +19,7 @@ public class Config {
     public static boolean enableDesertLakes = true;
     public static boolean enableModdedWorldgen = true;
     public static int dimensionProviderID = 88;
+    public static int classicBiomeID = 70;
 
     public static void initConfig() {
         conf = new Configuration(new File(Loader.instance().getConfigDir(), "ClassicWorldgen.cfg"));
@@ -36,6 +37,7 @@ public class Config {
         enableDesertLakes = conf.getBoolean("enableDesertLakes", "worldgen", enableDesertLakes, "enable lakes in desert in classic worldgen");
         enableModdedWorldgen = conf.getBoolean("enableModdedWorldgen", "worldgen", enableModdedWorldgen, "enable worldgen features from other mods");
         dimensionProviderID = conf.getInt("providerID", "dimensions", dimensionProviderID, Integer.MIN_VALUE, Integer.MAX_VALUE, null);
+        classicBiomeID = conf.getInt("classicID", "biomes", classicBiomeID, Integer.MIN_VALUE, Integer.MAX_VALUE, "Biome ID of the Classic biome");
         conf.save();
     }
 

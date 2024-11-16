@@ -14,6 +14,7 @@ import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.api.utils.BooleanOption;
 import dev.tilera.cwg.api.utils.IntOption;
 import dev.tilera.cwg.api.utils.StringOption;
+import dev.tilera.cwg.biome.Biomes;
 import dev.tilera.cwg.classic.ClassicChunkManagerFactory;
 import dev.tilera.cwg.command.CommandChangeWorld;
 import dev.tilera.cwg.dimensions.CustomDimensions;
@@ -24,6 +25,7 @@ import dev.tilera.cwg.hooks.HookOption;
 import dev.tilera.cwg.hooks.HookRegistry;
 import dev.tilera.cwg.hooks.ICavegenHook;
 import dev.tilera.cwg.hooks.SwissCavegenHook;
+import dev.tilera.cwg.infdev.InfdevChunkManagerFactory;
 import dev.tilera.cwg.noisegen.NoiseGeneratorOctavesFarlands;
 import dev.tilera.cwg.options.ChunkManagerOption;
 import dev.tilera.cwg.options.ConfigProvider;
@@ -69,6 +71,7 @@ public class ClassicWorldgen {
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
+        Biomes.init();
         MinecraftForge.TERRAIN_GEN_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(this);
         registerGenerators();
@@ -115,6 +118,7 @@ public class ClassicWorldgen {
         ).registerDefault());
         CwgGlobals.getGeneratorRegistry().registerChunkManager(new ClassicChunkManagerFactory());
         CwgGlobals.getGeneratorRegistry().registerChunkManager(new SingleBiomeChunkManagerFactory());
+        CwgGlobals.getGeneratorRegistry().registerChunkManager(new InfdevChunkManagerFactory());
     }
 
     @SubscribeEvent
