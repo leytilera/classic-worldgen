@@ -14,6 +14,7 @@ import dev.tilera.cwg.api.hooks.IHookProvider;
 import dev.tilera.cwg.hooks.ITemperatureHook;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.NoiseGeneratorPerlin;
+import scala.collection.mutable.StringBuilder;
 
 @Mixin(BiomeGenBase.class)
 public abstract class MixinBiomeGenBase {
@@ -30,7 +31,16 @@ public abstract class MixinBiomeGenBase {
           if (ClassicWorldgen.biomeCache.length > id) {
              BiomeGenBase self = (BiomeGenBase)(Object)this;
              if (ClassicWorldgen.biomeCache[id] != null && ClassicWorldgen.biomeCache[id] != self) {
-               throw new RuntimeException("Biome ID conflict: " + id + " : " + self.biomeName + " : " + ClassicWorldgen.biomeCache[id].biomeName);
+               StringBuilder builder = new StringBuilder();
+               builder.append("Biome ID conflict: " + id + " : " + self.biomeName + " : " + ClassicWorldgen.biomeCache[id].biomeName);
+               builder.append("\nFree Biome IDs:");
+               for (int i = 0; i < ClassicWorldgen.biomeCache.length; i++) {
+                  if (ClassicWorldgen.biomeCache[i] == null) {
+                     builder.append("\n");
+                     builder.append(i);
+                  }
+               }
+               throw new IllegalArgumentException(builder.toString());
              } else {
                 ClassicWorldgen.biomeCache[id] = self;
              }
