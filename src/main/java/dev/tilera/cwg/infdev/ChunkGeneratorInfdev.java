@@ -2,6 +2,10 @@ package dev.tilera.cwg.infdev;
 
 import java.util.List;
 import java.util.Random;
+
+import dev.tilera.cwg.api.hooks.IHookProvider;
+import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
+import dev.tilera.cwg.hooks.ICavegenHook;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.entity.EnumCreatureType;
@@ -41,6 +45,7 @@ public class ChunkGeneratorInfdev implements IChunkProvider {
    private double[] field_904_s = new double[256];
    private double[] field_903_t = new double[256];
    private MapGenBase caveGenerator;
+   private IGeneratorOptionProvider options;
    private MapGenStronghold strongholdGenerator = new MapGenStronghold();
    private MapGenMineshaft mineshaftGenerator = new MapGenMineshaft();
    double[] field_919_d;
@@ -50,7 +55,8 @@ public class ChunkGeneratorInfdev implements IChunkProvider {
    double[] field_915_h;
    int[][] field_914_i = new int[32][32];
 
-   public ChunkGeneratorInfdev(World world, long l, boolean par4, MapGenBase caveGenerator) {
+   public ChunkGeneratorInfdev(World world, long l, boolean par4, IGeneratorOptionProvider options) {
+      this.options = options;
       this.field_907_p = world;
       this.mapFeaturesEnabled = par4;
       this.field_913_j = new Random(l);
@@ -62,7 +68,7 @@ public class ChunkGeneratorInfdev implements IChunkProvider {
       this.field_922_a = new NoiseOctavesInfdev(this.field_913_j, 10);
       this.field_921_b = new NoiseOctavesInfdev(this.field_913_j, 16);
       this.field_920_c = new NoiseOctavesInfdev(this.field_913_j, 8);
-      this.caveGenerator = caveGenerator;
+      this.caveGenerator = options.getValue("cwg:cavegen_hook", IHookProvider.class).getHook(ICavegenHook.class).createCaveGenerator();
    }
 
    public void generateTerrain(int i, int j, Block[] blocks) {
@@ -211,7 +217,6 @@ public class ChunkGeneratorInfdev implements IChunkProvider {
       this.generateTerrain(i, j, blocks1);
       this.replaceBlocksForBiome(i, j, blocks1);
       Block[] blocks2 = new Block[65536];
-      //System.arraycopy(blocks1, 0, blocks2, 0, blocks1.length);
       ChunkConverter.convert(blocks1, blocks2);
       this.caveGenerator.func_151539_a(this, this.field_907_p, i, j, blocks2);
       if (this.mapFeaturesEnabled) {
@@ -335,7 +340,9 @@ public class ChunkGeneratorInfdev implements IChunkProvider {
       long l2 = this.field_913_j.nextLong() / 2L * 2L + 1L;
       this.field_913_j.setSeed((long)i * l1 + (long)j * l2 ^ this.field_907_p.getSeed());
       double d = 0.25D;
-      MinecraftForge.EVENT_BUS.post(new Pre(ichunkprovider, this.field_907_p, this.field_913_j, i, j, false));
+      if (options.getBoolean("cwg:generator.classic:enableModdedWorldgen")) {
+         MinecraftForge.EVENT_BUS.post(new Pre(ichunkprovider, this.field_907_p, this.field_913_j, i, j, false));
+      }
       if (this.mapFeaturesEnabled) {
          this.strongholdGenerator.generateStructuresInChunk(this.field_907_p, this.field_913_j, i, j);
          this.mineshaftGenerator.generateStructuresInChunk(this.field_907_p, this.field_913_j, i, j);
@@ -477,8 +484,9 @@ public class ChunkGeneratorInfdev implements IChunkProvider {
             }
          }
       }
-
-      MinecraftForge.EVENT_BUS.post(new Post(ichunkprovider, this.field_907_p, this.field_913_j, i, j, false));
+      if (options.getBoolean("cwg:generator.classic:enableModdedWorldgen")) {
+         MinecraftForge.EVENT_BUS.post(new Post(ichunkprovider, this.field_907_p, this.field_913_j, i, j, false));
+      }
       BlockFalling.fallInstantly = false;
    }
 
