@@ -14,6 +14,7 @@ import dev.tilera.cwg.api.hooks.IHookProvider;
 import dev.tilera.cwg.hooks.ITemperatureHook;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.NoiseGeneratorPerlin;
+import scala.collection.mutable.StringBuilder;
 
 @Mixin(BiomeGenBase.class)
 public abstract class MixinBiomeGenBase {
@@ -24,13 +25,22 @@ public abstract class MixinBiomeGenBase {
     @Final
     protected static NoiseGeneratorPerlin temperatureNoise;
 
-    @Inject(method = "<init>(IZ)V", at = @At("TAIL"))
+    @Inject(method = "<init>(IZ)V", at = @At("TAIL"), remap = false)
     public void constructorHead(int id, boolean register, CallbackInfo ci) {
        if (register) {
           if (ClassicWorldgen.biomeCache.length > id) {
              BiomeGenBase self = (BiomeGenBase)(Object)this;
              if (ClassicWorldgen.biomeCache[id] != null && ClassicWorldgen.biomeCache[id] != self) {
-               throw new RuntimeException("Biome ID conflict: " + id + " : " + self.biomeName + " : " + ClassicWorldgen.biomeCache[id].biomeName);
+               StringBuilder builder = new StringBuilder();
+               builder.append("Biome ID conflict: " + id + " : " + self.biomeName + " : " + ClassicWorldgen.biomeCache[id].biomeName);
+               builder.append("\nFree Biome IDs:");
+               for (int i = 0; i < ClassicWorldgen.biomeCache.length; i++) {
+                  if (ClassicWorldgen.biomeCache[i] == null) {
+                     builder.append("\n");
+                     builder.append(i);
+                  }
+               }
+               throw new IllegalArgumentException(builder.toString());
              } else {
                 ClassicWorldgen.biomeCache[id] = self;
              }
@@ -42,7 +52,7 @@ public abstract class MixinBiomeGenBase {
      * @author tilera
      * @reason No snow on hills
      */
-    @Overwrite(remap = false)
+    @Overwrite
     public float getFloatTemperature(int p_150564_1_, int p_150564_2_, int p_150564_3_) {
         ITemperatureHook hook = CwgGlobals.getOptionProvider().getValue("cwg:temperature_hook", IHookProvider.class).getHook(ITemperatureHook.class);
         return hook.getFloatTemperature(CwgGlobals.getCurrentState(), p_150564_1_, p_150564_2_, p_150564_3_, this.temperature, temperatureNoise);
