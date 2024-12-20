@@ -6,6 +6,10 @@ buildscript {
             url = "https://maven.minecraftforge.net/"
         }
         maven {
+            name = "tilera"
+            url = "https://maven.tilera.xyz"
+        }
+        maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
@@ -14,17 +18,21 @@ buildscript {
         classpath ('com.anatawa12.forge:ForgeGradle:1.2-1.0.+') {
             changing = true
         }
+        classpath ('net.anvilcraft:gradlehaxe:0.1.0') {
+            changing = true
+        }
     }
 }
 
 apply plugin: 'forge'
+apply plugin: 'haxe'
 apply plugin: 'maven-publish'
 apply from: './gradle/scripts/mixins.gradle'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-version = "2.0.0-alpha.1"
+version = "2.0.0-alpha.2"
 group= "dev.tilera.modding"
 archivesBaseName = "cwg"
 
@@ -46,6 +54,27 @@ repositories {
         name 'Overmind forge repo mirror'
         url 'https://gregtech.overminddl1.com/'
     }
+}
+
+sourceSets {
+    hx {
+        haxeopts {
+            includePackage "dev.tilera.cwg"
+            remapHaxePackage "dev.tilera.cwg.haxe"
+        }
+    }
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
+configurations {
+    hxImplementation.extendsFrom implementation
 }
 
 dependencies {
@@ -70,26 +99,18 @@ jar {
                 "FMLAT": "cwg_at.cfg"
         ])
     }
-}
-
-sourceSets {
-    main {
-        java {
-            srcDir 'src/main/java'
-        }
-        resources {
-            srcDir 'src/main/resources'
-        }
-    }
+    from sourceSets.hx.output
 }
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
+    from sourceSets.hx.output
     classifier = 'deobf'
 }
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
+    from sourceSets.hx.allSource
     classifier = 'sources'
 }
 
