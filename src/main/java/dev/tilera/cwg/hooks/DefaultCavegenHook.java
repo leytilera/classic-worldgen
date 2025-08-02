@@ -20,5 +20,10 @@ public class DefaultCavegenHook implements ICavegenHook {
     public String getID() {
         return "cwg:vanilla_cavegen";
     }
+
+    @Override
+    public String getDisplayName() {
+        return "Vanilla Cavegen";
+    }
     
 }

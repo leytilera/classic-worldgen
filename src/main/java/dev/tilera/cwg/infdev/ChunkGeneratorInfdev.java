@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import dev.tilera.cwg.api.hooks.IHookProvider;
+import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.hooks.ICavegenHook;
 import net.minecraft.block.Block;
@@ -68,7 +69,7 @@ public class ChunkGeneratorInfdev implements IChunkProvider {
       this.field_922_a = new NoiseOctavesInfdev(this.field_913_j, 10);
       this.field_921_b = new NoiseOctavesInfdev(this.field_913_j, 16);
       this.field_920_c = new NoiseOctavesInfdev(this.field_913_j, 8);
-      this.caveGenerator = options.getValue("cwg:cavegen_hook", IHookProvider.class).getHook(ICavegenHook.class).createCaveGenerator();
+      this.caveGenerator = options.getValue("cwg:cavegen_hook", IHookProvider.class).getHook(HookTypes.CAVEGEN).createCaveGenerator();
    }
 
    public void generateTerrain(int i, int j, Block[] blocks) {

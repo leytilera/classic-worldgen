@@ -1,8 +1,10 @@
 package dev.tilera.cwg.classic;
 
 import dev.tilera.cwg.api.hooks.IHookProvider;
+import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.hooks.ICavegenHook;
+import dev.tilera.cwg.hooks.IStructureGenHook;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.SpawnerAnimals;
@@ -24,8 +26,10 @@ public class ChunkProviderClassic extends ChunkProviderGenerate {
     public ChunkProviderClassic(World world, long seed, boolean features, IGeneratorOptionProvider options) {
         super(world, seed, features);
         this.options = options;
-        ICavegenHook hook = options.getValue("cwg:cavegen_hook", IHookProvider.class).getHook(ICavegenHook.class);
-        hook.setCavegen(this);
+        ICavegenHook hook1 = options.getValue("cwg:cavegen_hook", IHookProvider.class).getHook(HookTypes.CAVEGEN);
+        hook1.setCavegen(this);
+        IStructureGenHook hook2 = options.getValue("cwg:structuregen_hook", IHookProvider.class).getHook(HookTypes.STRUCTUREGEN);
+        hook2.setStructureGen(this);;
     }
 
     @Override

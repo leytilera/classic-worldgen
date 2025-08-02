@@ -4,6 +4,7 @@ import dev.tilera.cwg.DelegateChunkManager;
 import dev.tilera.cwg.api.generator.AbstractChunkManager;
 import dev.tilera.cwg.api.generator.IChunkManagerFactory;
 import dev.tilera.cwg.api.hooks.IHookProvider;
+import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IOption;
 import dev.tilera.cwg.hooks.ICavegenHook;
@@ -25,7 +26,7 @@ public class WorldtypeChunkManagerFactory implements IChunkManagerFactory {
         WorldChunkManager manager = type.getChunkManager(world);
         tempChangeOpts(world, gnBack, original);
         if (provider instanceof ChunkProviderGenerate) {
-            ICavegenHook hook = options.getValue("cwg:cavegen_hook", IHookProvider.class).getHook(ICavegenHook.class);
+            ICavegenHook hook = options.getValue("cwg:cavegen_hook", IHookProvider.class).getHook(HookTypes.CAVEGEN);
             hook.setCavegen((ChunkProviderGenerate) provider);
         }
         return new DelegateChunkManager(options, provider, manager);

@@ -13,6 +13,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import dev.tilera.cwg.api.generator.IChunkManagerFactory;
+import dev.tilera.cwg.api.hooks.IHookProvider;
+import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.api.options.IOption;
@@ -35,7 +37,7 @@ public class OptionRegistry implements IGeneratorOptionRegistry {
     @Override
     public String encodeOptions(IGeneratorOptionProvider provider) {
         JsonObject json = new JsonObject();
-        IChunkManagerFactory generator = provider.getValue("cwg:generator", IChunkManagerFactory.class);
+        IChunkManagerFactory generator = provider.getValue("cwg:generator", IHookProvider.class).getHook(HookTypes.GENERATOR);
         for (String id : this.getRegisteredOptions()) {
             IOption<?> o = registry.get(id);
             if (o == null) {

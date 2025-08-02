@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import dev.tilera.cwg.ClassicWorldgen;
 import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.hooks.IHookProvider;
+import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.hooks.ITemperatureHook;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.NoiseGeneratorPerlin;
@@ -54,7 +55,7 @@ public abstract class MixinBiomeGenBase {
      */
     @Overwrite
     public float getFloatTemperature(int p_150564_1_, int p_150564_2_, int p_150564_3_) {
-        ITemperatureHook hook = CwgGlobals.getOptionProvider().getValue("cwg:temperature_hook", IHookProvider.class).getHook(ITemperatureHook.class);
+        ITemperatureHook hook = CwgGlobals.getOptionProvider().getValue("cwg:temperature_hook", IHookProvider.class).getHook(HookTypes.TEMPERATURE);
         return hook.getFloatTemperature(CwgGlobals.getCurrentState(), p_150564_1_, p_150564_2_, p_150564_3_, this.temperature, temperatureNoise);
      }
     

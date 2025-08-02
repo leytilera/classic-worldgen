@@ -1,79 +1,20 @@
 package dev.tilera.cwg.options;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import dev.tilera.cwg.api.generator.IChunkManagerFactory;
-import dev.tilera.cwg.api.generator.IChunkManagerRegistry;
-import dev.tilera.cwg.api.options.IOption;
+import dev.tilera.cwg.api.hooks.IHookRegistry;
+import dev.tilera.cwg.api.hooks.common.HookTypes;
+import dev.tilera.cwg.hooks.HookOption;
 
-public class ChunkManagerOption implements IOption<IChunkManagerFactory> {
-
-    private String id;
-    private String displayName;
-    private IChunkManagerFactory defaultValue;
-    private IChunkManagerRegistry registry;
+public class ChunkManagerOption extends HookOption {
 
     public ChunkManagerOption(String id, String displayName, IChunkManagerFactory defaultValue,
-            IChunkManagerRegistry registry) {
-        this.id = id;
-        this.displayName = displayName;
-        this.defaultValue = defaultValue;
-        this.registry = registry;
-    }
-
-    @Override
-    public IChunkManagerFactory getDefault() {
-        return defaultValue;
-    }
-
-    @Override
-    public String getID() {
-        return id;
-    }
-
-    @Override
-    public String getVisableName() {
-        return displayName;
-    }
-
-    @Override
-    public Class<IChunkManagerFactory> getType() {
-        return IChunkManagerFactory.class;
-    }
-
-    @Override
-    public Map<IChunkManagerFactory, String> getPossibleValues() {
-        Map<IChunkManagerFactory, String> map = new HashMap<>();
-        for (IChunkManagerFactory m : registry.getChunkManagers()) {
-            map.put(m, m.getDisplayName());
-        }
-        return map;
-    }
-
-    @Override
-    public IChunkManagerFactory decodeString(String input) {
-        return null;
-    }
-
-    @Override
-    public IChunkManagerFactory fromRepresentation(String repr) {
-        return registry.getFactory(repr);
-    }
-
-    @Override
-    public String toRepresentation(IChunkManagerFactory obj) {
-        return obj.getID();
+            IHookRegistry registry) {
+        super(id, displayName, defaultValue, registry, HookTypes.GENERATOR);
     }
 
     @Override
     public Type getOptionType() {
         return Type.ENUM;
-    }
-
-    public ChunkManagerOption registerDefault() {
-        registry.registerChunkManager(defaultValue);
-        return this;
     }
     
 }

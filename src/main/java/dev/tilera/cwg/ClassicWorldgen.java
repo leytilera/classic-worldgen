@@ -13,6 +13,7 @@ import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.hooks.IHookProvider;
+import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.biome.Biomes;
 import dev.tilera.cwg.classic.ClassicModule;
@@ -26,7 +27,6 @@ import dev.tilera.cwg.infdev.InfdevModule;
 import dev.tilera.cwg.modules.IModule;
 import dev.tilera.cwg.noisegen.NoiseGeneratorOctavesFarlands;
 import dev.tilera.cwg.options.ConfigProvider;
-import dev.tilera.cwg.options.GeneratorRegistry;
 import dev.tilera.cwg.options.OptionRegistry;
 import dev.tilera.cwg.proxy.CommonProxy;
 import dev.tilera.cwg.worldtypes.WorldtypeModule;
@@ -61,9 +61,9 @@ public class ClassicWorldgen {
         CustomDimensions.INSTANCE = new CustomDimensions(optionRegistry);
         CwgGlobals.setOptionRegistry(optionRegistry);
         CwgGlobals.setDefaultProvider(CONFIG);
-        CwgGlobals.setGeneratorRegistry(new GeneratorRegistry());
         CwgGlobals.setHookRegistry(new HookRegistry());
         CwgGlobals.setCurrentState(null);
+        HookTypes.init(CwgGlobals.getHookRegistry());
     }
 
     @EventHandler
@@ -104,13 +104,13 @@ public class ClassicWorldgen {
 
     public void registerGenerators() {
         for(IModule module : modules) {
-            module.registerGenerators(CwgGlobals.getGeneratorRegistry());
+            module.registerGenerators(CwgGlobals.getHookRegistry());
         }
     }
 
     @SubscribeEvent
     public void onInitMapGen(InitMapGenEvent event) {
-        ICavegenHook hook = CwgGlobals.getOptionProvider().getValue("cwg:cavegen_hook", IHookProvider.class).getHook(ICavegenHook.class);
+        ICavegenHook hook = CwgGlobals.getOptionProvider().getValue("cwg:cavegen_hook", IHookProvider.class).getHook(HookTypes.CAVEGEN);
         if (event.type == InitMapGenEvent.EventType.CAVE) {
             event.newGen = hook.createCaveGenerator();
         } else if (event.type == InitMapGenEvent.EventType.RAVINE) {

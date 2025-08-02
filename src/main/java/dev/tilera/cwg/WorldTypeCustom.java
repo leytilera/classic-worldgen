@@ -2,9 +2,12 @@ package dev.tilera.cwg;
 
 import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.generator.AbstractChunkManager;
-import dev.tilera.cwg.api.generator.IChunkManagerFactory;
+import dev.tilera.cwg.api.hooks.IHookProvider;
+import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiCreateWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.WorldChunkManager;
@@ -31,7 +34,7 @@ public class WorldTypeCustom extends WorldType {
                 options = registry;
             }
         }
-        AbstractChunkManager manager = options.getValue("cwg:generator", IChunkManagerFactory.class).createChunkManager(options, world);
+        AbstractChunkManager manager = options.getValue("cwg:generator", IHookProvider.class).getHook(HookTypes.GENERATOR).createChunkManager(options, world);
         CwgGlobals.setCurrentState(world);
         return manager;
     }
@@ -43,6 +46,17 @@ public class WorldTypeCustom extends WorldType {
         } else {
             throw new RuntimeException("Invalid WorldChunkManager");
         }
+    }
+
+    @Override
+    public boolean isCustomizable() {
+        return true;
+    }
+
+    @Override
+    public void onCustomizeButton(Minecraft instance, GuiCreateWorld guiCreateWorld) {
+        IGeneratorOptionRegistry registry = CwgGlobals.getOptionRegistry();
+        //instance.displayGuiScreen(new GuiCustomize(registry, guiCreateWorld, new OptionProvider(registry)));
     }
 
 }

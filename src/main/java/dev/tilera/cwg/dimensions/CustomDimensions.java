@@ -15,7 +15,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
 import dev.tilera.cwg.Config;
-import dev.tilera.cwg.api.generator.IChunkManagerRegistry;
 import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
@@ -92,7 +91,7 @@ public class CustomDimensions implements IModule {
     }
 
     @Override
-    public void registerGenerators(IChunkManagerRegistry registry) {}
+    public void registerGenerators(IHookRegistry registry) {}
 
     @Override
     public void registerOptions(IGeneratorOptionRegistry registry) {

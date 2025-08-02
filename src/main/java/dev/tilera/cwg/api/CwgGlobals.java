@@ -1,7 +1,6 @@
 package dev.tilera.cwg.api;
 
 import dev.tilera.cwg.api.generator.AbstractChunkManager;
-import dev.tilera.cwg.api.generator.IChunkManagerRegistry;
 import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
@@ -11,7 +10,6 @@ public class CwgGlobals {
 
     private static IGeneratorOptionProvider defaultProvider = null;
     private static IHookRegistry hookRegistry = null;
-    private static IChunkManagerRegistry generatorRegistry = null;
     private static IGeneratorOptionRegistry optionRegistry = null;
     private static World currentWorld = null;
 
@@ -48,14 +46,6 @@ public class CwgGlobals {
 
     public static IHookRegistry getHookRegistry() {
         return hookRegistry;
-    }
-
-    public static void setGeneratorRegistry(IChunkManagerRegistry registry) {
-        generatorRegistry = registry;
-    }
-
-    public static IChunkManagerRegistry getGeneratorRegistry() {
-        return generatorRegistry;
     }
 
     public static void setOptionRegistry(IGeneratorOptionRegistry registry) {

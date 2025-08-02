@@ -3,12 +3,16 @@ package dev.tilera.cwg.api.hooks;
 public interface IHookProvider {
 
     @SuppressWarnings("unchecked")
-    default <T> T getHook(Class<T> clazz) {
-        return (T) this;
+    default <T> T getHook(IHookType<T> type) {
+        return type.getHookClass().isAssignableFrom(this.getClass()) ? (T) this : null;
     }
 
-    default String getID() {
-        return this.getClass().getCanonicalName();
+    String getID();
+
+    String getDisplayName();
+
+    default boolean isSupported(IHookType<?> type) {
+        return type.getHookClass().isAssignableFrom(this.getClass());
     }
-    
+
 }

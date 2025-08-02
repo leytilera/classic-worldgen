@@ -1,6 +1,5 @@
 package dev.tilera.cwg.worldtypes;
 
-import dev.tilera.cwg.api.generator.IChunkManagerRegistry;
 import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.api.utils.StringOption;
@@ -9,8 +8,8 @@ import dev.tilera.cwg.modules.IModule;
 public class WorldtypeModule implements IModule {
 
     @Override
-    public void registerGenerators(IChunkManagerRegistry registry) {
-        registry.registerChunkManager(new WorldtypeChunkManagerFactory());
+    public void registerGenerators(IHookRegistry registry) {
+        registry.registerHookProvider(new WorldtypeChunkManagerFactory());
     }
 
     @Override

@@ -1,7 +1,6 @@
 package dev.tilera.cwg;
 
 import dev.tilera.cwg.api.CwgGlobals;
-import dev.tilera.cwg.api.generator.IChunkManagerRegistry;
 import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.api.utils.BooleanOption;
@@ -14,8 +13,8 @@ import dev.tilera.cwg.vanilla.VanillaChunkManagerFactory;
 public class DefaultModule implements IModule {
 
     @Override
-    public void registerGenerators(IChunkManagerRegistry registry) {
-        registry.registerChunkManager(new SingleBiomeChunkManagerFactory());
+    public void registerGenerators(IHookRegistry registry) {
+        registry.registerHookProvider(new SingleBiomeChunkManagerFactory());
     }
 
     @Override
@@ -29,9 +28,9 @@ public class DefaultModule implements IModule {
         registry.registerOption(new IntOption("cwg:generator.singleBiome:biomeID", "Biome ID", 0, false, true));
         registry.registerOption(new ChunkManagerOption(
             "cwg:generator", 
-            "Generator",
+            "Generator", 
             new VanillaChunkManagerFactory(),
-            CwgGlobals.getGeneratorRegistry()
+            CwgGlobals.getHookRegistry()
         ).registerDefault());
     }
 

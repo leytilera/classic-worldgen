@@ -15,5 +15,15 @@ public class DefaultTemperatureHook implements ITemperatureHook {
             return baseTemperature;
          }
     }
+
+    @Override
+    public String getID() {
+        return "cwg:default_temperature";
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Default Temperature Manager";
+    }
     
 }

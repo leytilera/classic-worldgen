@@ -20,5 +20,10 @@ public class SwissCavegenHook implements ICavegenHook {
     public String getID() {
         return "cwg:swiss_cavegen";
     }
+
+    @Override
+    public String getDisplayName() {
+        return "Default Cavegen";
+    }
     
 }

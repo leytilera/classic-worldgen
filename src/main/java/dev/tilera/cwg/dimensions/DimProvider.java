@@ -1,7 +1,8 @@
 package dev.tilera.cwg.dimensions;
 
 import dev.tilera.cwg.api.generator.AbstractChunkManager;
-import dev.tilera.cwg.api.generator.IChunkManagerFactory;
+import dev.tilera.cwg.api.hooks.IHookProvider;
+import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -26,7 +27,7 @@ public class DimProvider extends WorldProvider {
     @Override
     protected void registerWorldChunkManager() {
         IGeneratorOptionProvider options = CustomDimensions.INSTANCE.getDimensionOptions(dimensionId);
-        this.worldChunkMgr = options.getValue("cwg:generator", IChunkManagerFactory.class).createChunkManager(options, worldObj);
+        this.worldChunkMgr = options.getValue("cwg:generator", IHookProvider.class).getHook(HookTypes.GENERATOR).createChunkManager(options, worldObj);
     }
 
     protected IGeneratorOptionProvider getOptions() {
