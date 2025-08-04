@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dev.tilera.cwg.api.options.IOption;
+import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectSerializer;
+import dev.tilera.cwg.serialize.CombinedSerializer;
+import dev.tilera.cwg.serialize.IntSerializer;
 
 public class EnumOption<T extends Enum<T>> implements IOption<T> {
 
@@ -56,18 +60,13 @@ public class EnumOption<T extends Enum<T>> implements IOption<T> {
     }
 
     @Override
-    public T fromRepresentation(String repr) {
-        return Enum.valueOf(getType(), repr);
-    }
-
-    @Override
-    public String toRepresentation(T obj) {
-        return obj.name();
-    }
-
-    @Override
     public Type getOptionType() {
         return Type.ENUM;
+    }
+
+    @Override
+    public <E> IObjectSerializer<E, T> getSerializer(IObjectManipulator<E> manipulator) {
+        return new CombinedSerializer<>(new IntSerializer<>(manipulator), enumManager);
     }
     
 }

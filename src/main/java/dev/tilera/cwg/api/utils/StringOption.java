@@ -3,6 +3,9 @@ package dev.tilera.cwg.api.utils;
 import java.util.Map;
 
 import dev.tilera.cwg.api.options.IOption;
+import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectSerializer;
+import dev.tilera.cwg.serialize.StringSerializer;
 
 public class StringOption implements IOption<String> {
 
@@ -55,16 +58,6 @@ public class StringOption implements IOption<String> {
     }
 
     @Override
-    public String fromRepresentation(String repr) {
-        return null;
-    }
-
-    @Override
-    public String toRepresentation(String obj) {
-        return null;
-    }
-
-    @Override
     public Type getOptionType() {
         return isInternal ? Type.INTERNAL : Type.STRING;
     }
@@ -72,6 +65,11 @@ public class StringOption implements IOption<String> {
     @Override
     public boolean isGeneratorSpecific() {
         return generatorSpecific;
+    }
+
+    @Override
+    public <E> IObjectSerializer<E, String> getSerializer(IObjectManipulator<E> manipulator) {
+        return new StringSerializer<>(manipulator);
     }
     
     

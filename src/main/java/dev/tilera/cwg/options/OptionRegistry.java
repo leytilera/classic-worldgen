@@ -1,28 +1,30 @@
 package dev.tilera.cwg.options;
 
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
+
 import java.util.Set;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
-import dev.tilera.cwg.api.generator.IChunkManagerFactory;
-import dev.tilera.cwg.api.hooks.IHookProvider;
-import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.api.options.IOption;
+import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectSerializer;
+import dev.tilera.cwg.serialize.Base64Encoder;
+import dev.tilera.cwg.serialize.CombinedSerializer;
+import dev.tilera.cwg.serialize.GsonManipulator;
+import dev.tilera.cwg.serialize.GsonSerializer;
 
 public class OptionRegistry implements IGeneratorOptionRegistry {
     
     private Map<String, IOption<?>> registry = new HashMap<>();
-    private Gson gson = new GsonBuilder().create();
+    private IObjectSerializer<String, JsonElement> gsonSerializer = GsonSerializer.STRING;
+    private IObjectSerializer<String, JsonElement> base64JsonSerializer = new CombinedSerializer<>(Base64Encoder.INSTANCE, gsonSerializer);
+    private IObjectManipulator<JsonElement> manipulator = new GsonManipulator();
+    private IObjectSerializer<JsonElement, IGeneratorOptionProvider> optionSerializer = new OptionSerializer<JsonElement>(manipulator, this, this);
+    private IObjectSerializer<String, IGeneratorOptionProvider> base64OptionSerializer = new CombinedSerializer<>(base64JsonSerializer, optionSerializer);
 
     @Override
     public void registerOption(IOption<?> option) {
@@ -36,55 +38,12 @@ public class OptionRegistry implements IGeneratorOptionRegistry {
 
     @Override
     public String encodeOptions(IGeneratorOptionProvider provider) {
-        JsonObject json = new JsonObject();
-        IChunkManagerFactory generator = provider.getValue("cwg:generator", IHookProvider.class).getHook(HookTypes.GENERATOR);
-        for (String id : this.getRegisteredOptions()) {
-            IOption<?> o = registry.get(id);
-            if (o == null) {
-                continue;
-            } else if (generator != null && o.isGeneratorSpecific() && !generator.hasSpecificOption(o)) {
-                continue;
-            } else if (o.getType() == Integer.class) {
-                json.add(id, new JsonPrimitive(provider.getInt(id)));
-            } else if (o.getType() == Double.class) {
-                json.add(id, new JsonPrimitive(provider.getDouble(id)));
-            } else if (o.getType() == Boolean.class) {
-                json.add(id, new JsonPrimitive(provider.getBoolean(id)));
-            } else if (o.getType() == String.class) {
-                json.add(id, new JsonPrimitive(provider.getString(id)));
-            } else {
-                String enc = o.toRepresentation(id, provider);
-                json.add(id, new JsonPrimitive(enc));
-            }
-        }
-        String jsn = gson.toJson(json);
-        return Base64.getEncoder().encodeToString(jsn.getBytes());
+        return base64OptionSerializer.serialize(provider);
     }
 
     @Override
     public IGeneratorOptionProvider decodeOptions(String options) {
-        String jsn = new String(Base64.getDecoder().decode(options));
-        JsonObject json = gson.fromJson(jsn, JsonObject.class);
-        OptionProvider provider = new OptionProvider(this);
-        for (Entry<String, JsonElement> e : json.entrySet()) {
-            if (!e.getValue().isJsonPrimitive()) continue;
-            JsonPrimitive value = e.getValue().getAsJsonPrimitive();
-            IOption<?> o = registry.get(e.getKey());
-            if (o == null) {
-                continue;
-            } else if (o.getType() == Integer.class && value.isNumber()) {
-                provider.putInt(o.getID(), value.getAsInt());
-            } else if (o.getType() == Double.class && value.isNumber()) {
-                provider.putDouble(o.getID(), value.getAsDouble());
-            } else if (o.getType() == Boolean.class && value.isBoolean()) {
-                provider.putBoolean(o.getID(), value.getAsBoolean());
-            } else if (o.getType() == String.class && value.isString()) {
-                provider.putString(o.getID(), value.getAsString());
-            } else if (value.isString()) {
-                provider.putValue(o.getID(), o.fromRepresentation(value.getAsString()));
-            }
-        }
-        return provider;
+        return base64OptionSerializer.deserialize(options);
     }
 
     @Override

@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dev.tilera.cwg.api.options.IOption;
+import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectSerializer;
+import dev.tilera.cwg.serialize.CombinedSerializer;
+import dev.tilera.cwg.serialize.StringSerializer;
 import net.minecraft.world.WorldType;
 
 public class WorldTypeOption implements IOption<WorldType> {
@@ -49,18 +53,13 @@ public class WorldTypeOption implements IOption<WorldType> {
     }
 
     @Override
-    public WorldType fromRepresentation(String repr) {
-        return WorldType.parseWorldType(repr);
-    }
-
-    @Override
-    public String toRepresentation(WorldType obj) {
-        return obj.getWorldTypeName();
-    }
-
-    @Override
     public boolean isGeneratorSpecific() {
         return true;
+    }
+
+    @Override
+    public <E> IObjectSerializer<E, WorldType> getSerializer(IObjectManipulator<E> manipulator) {
+        return new CombinedSerializer<>(new StringSerializer<>(manipulator), WorldTypeSerializer.INSTANCE);
     }
     
 }

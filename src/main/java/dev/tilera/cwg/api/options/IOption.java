@@ -2,6 +2,9 @@ package dev.tilera.cwg.api.options;
 
 import java.util.Map;
 
+import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectSerializer;
+
 public interface IOption<T> {
     
     T getDefault();
@@ -18,14 +21,7 @@ public interface IOption<T> {
 
     T decodeString(String input);
 
-    T fromRepresentation(String repr);
-
-    String toRepresentation(T obj);
-
-    default String toRepresentation(String id, IGeneratorOptionProvider provider) {
-        T obj = provider.getValue(id, getType());
-        return toRepresentation(obj);
-    }
+    <E> IObjectSerializer<E, T> getSerializer(IObjectManipulator<E> manipulator);
 
     default boolean isGeneratorSpecific() {
         return false;

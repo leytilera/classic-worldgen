@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dev.tilera.cwg.api.options.IOption;
+import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectSerializer;
+import dev.tilera.cwg.serialize.BooleanSerializer;
 
 public class BooleanOption implements IOption<Boolean> {
 
@@ -60,16 +63,6 @@ public class BooleanOption implements IOption<Boolean> {
     }
 
     @Override
-    public Boolean fromRepresentation(String repr) {
-        return null;
-    }
-
-    @Override
-    public String toRepresentation(Boolean obj) {
-        return null;
-    }
-
-    @Override
     public boolean isGeneratorSpecific() {
         return isGeneratorSpecific;
     }
@@ -77,6 +70,11 @@ public class BooleanOption implements IOption<Boolean> {
     @Override
     public Type getOptionType() {
         return Type.ENUM;
+    }
+
+    @Override
+    public <E> IObjectSerializer<E, Boolean> getSerializer(IObjectManipulator<E> manipulator) {
+        return new BooleanSerializer<>(manipulator);
     }
     
 }

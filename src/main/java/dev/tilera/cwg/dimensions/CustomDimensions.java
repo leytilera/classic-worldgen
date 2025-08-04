@@ -3,35 +3,42 @@ package dev.tilera.cwg.dimensions;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 
 import dev.tilera.cwg.Config;
 import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
+import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectSerializer;
+import dev.tilera.cwg.api.serialize.ISerializedRead;
 import dev.tilera.cwg.api.utils.IntOption;
 import dev.tilera.cwg.api.utils.StringOption;
 import dev.tilera.cwg.modules.IModule;
+import dev.tilera.cwg.options.OptionSerializer;
+import dev.tilera.cwg.serialize.Base64Encoder;
+import dev.tilera.cwg.serialize.CombinedSerializer;
+import dev.tilera.cwg.serialize.GsonManipulator;
+import dev.tilera.cwg.serialize.GsonSerializer;
 import net.minecraftforge.common.DimensionManager;
 
 public class CustomDimensions implements IModule {
 
     public static CustomDimensions INSTANCE;
-    private Gson gson = new GsonBuilder().create();
-    private IGeneratorOptionRegistry registry;
     private Map<Integer, IGeneratorOptionProvider> dimensions = new HashMap<>();
+    private IObjectManipulator<JsonElement> manipulator = new GsonManipulator();
+    private IObjectSerializer<JsonElement, IGeneratorOptionProvider> optionSerializer;
+    private IObjectSerializer<String, JsonElement> base64JsonSerializer = new CombinedSerializer<>(Base64Encoder.INSTANCE, GsonSerializer.STRING);
+    private IObjectSerializer<String, IGeneratorOptionProvider> base64OptionSerializer;
 
     public CustomDimensions(IGeneratorOptionRegistry registry) {
-        this.registry = registry;
+        this.optionSerializer = new OptionSerializer<>(manipulator, registry, registry);
+        this.base64OptionSerializer = new CombinedSerializer<>(base64JsonSerializer, optionSerializer);
     }
 
     public IGeneratorOptionProvider getDimensionOptions(int id) {
@@ -51,20 +58,21 @@ public class CustomDimensions implements IModule {
     }
 
     public void readConfig(File file) {
-        JsonObject[] dims = decodeConfig(file);
-        for (JsonObject dim : dims) {
-            Integer id = getDimID(dim);
-            IGeneratorOptionProvider options = decodeOptions(dim);
+        JsonArray dims = decodeConfig(file);
+        for (JsonElement dim : dims) {
+            if (!dim.isJsonObject()) continue;
+            Integer id = getDimID(dim.getAsJsonObject());
+            IGeneratorOptionProvider options = decodeOptions(dim.getAsJsonObject());
             dimensions.put(id, options);
         }
     }
 
-    private JsonObject[] decodeConfig(File file) {
+    private JsonArray decodeConfig(File file) {
         try {
-            return gson.fromJson(new FileReader(file), JsonObject[].class);
+            return GsonSerializer.RW.deserialize(ISerializedRead.fromReader(new FileReader(file))).getAsJsonArray();
         } catch (FileNotFoundException e) {
-            return new JsonObject[0];
-        } catch (JsonSyntaxException | JsonIOException e) {
+            return new JsonArray();
+        } catch (IllegalArgumentException | IllegalStateException e) {
             throw new RuntimeException(e);
         }
     }
@@ -75,19 +83,17 @@ public class CustomDimensions implements IModule {
         return id.getAsInt();
     }
 
-    private IGeneratorOptionProvider decodeOptions(JsonObject def) throws IllegalStateException {
+    private IGeneratorOptionProvider decodeOptions(JsonObject def) throws IllegalStateException, IllegalArgumentException {
         JsonElement options = def.get("options");
-        String encodedJson = null;
         if (options == null) {
             throw new IllegalStateException("Dimension definition does not contain valid options: " + def);
         } else if (options.isJsonObject()) {
-            encodedJson = Base64.getEncoder().encodeToString(gson.toJson(options).getBytes());
+            return optionSerializer.deserialize(options);
         } else if (options.isJsonPrimitive() && options.getAsJsonPrimitive().isString()) {
-            encodedJson = options.getAsJsonPrimitive().getAsString();
+            return base64OptionSerializer.deserialize(options.getAsString());
         } else {
             throw new IllegalStateException("Dimension definition does not contain valid options: " + def);
         }
-        return registry.decodeOptions(encodedJson);
     }
 
     @Override

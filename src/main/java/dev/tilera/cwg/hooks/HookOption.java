@@ -7,6 +7,8 @@ import dev.tilera.cwg.api.hooks.IHookOption;
 import dev.tilera.cwg.api.hooks.IHookProvider;
 import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.hooks.IHookType;
+import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectSerializer;
 
 public class HookOption implements IHookOption<IHookProvider> {
 
@@ -61,16 +63,6 @@ public class HookOption implements IHookOption<IHookProvider> {
         return null;
     }
 
-    @Override
-    public IHookProvider fromRepresentation(String repr) {
-        return registry.getHookProvider(repr, getHookType());
-    }
-
-    @Override
-    public String toRepresentation(IHookProvider obj) {
-        return obj.getID();
-    }
-
     public HookOption registerDefault() {
         registry.registerHookProvider(defaultProvider);
         return this;
@@ -79,6 +71,11 @@ public class HookOption implements IHookOption<IHookProvider> {
     @Override
     public IHookType<?> getHookType() {
         return hookType;
+    }
+
+    @Override
+    public <E> IObjectSerializer<E, IHookProvider> getSerializer(IObjectManipulator<E> manipulator) {
+        return new HookIdSerializer<E>(registry, manipulator);
     }
     
 }
