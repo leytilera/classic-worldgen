@@ -29,6 +29,7 @@ import dev.tilera.cwg.noisegen.NoiseGeneratorOctavesFarlands;
 import dev.tilera.cwg.options.ConfigProvider;
 import dev.tilera.cwg.options.OptionRegistry;
 import dev.tilera.cwg.proxy.CommonProxy;
+import dev.tilera.cwg.quadrants.QuadrantsModule;
 import dev.tilera.cwg.worldtypes.WorldtypeModule;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.NoiseGenerator;
@@ -88,6 +89,7 @@ public class ClassicWorldgen {
         modules.add(new ClassicModule());
         modules.add(new InfdevModule());
         modules.add(new WorldtypeModule());
+        modules.add(new QuadrantsModule());
     }
 
     public void registerOptions() {
