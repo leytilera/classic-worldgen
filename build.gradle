@@ -18,12 +18,13 @@ buildscript {
         classpath ('com.anatawa12.forge:ForgeGradle:1.2-1.0.+') {
             changing = true
         }
-        classpath ('net.anvilcraft:gradlehaxe:0.1.0') {
+        classpath ('net.anvilcraft:gradlehaxe:0.2.0') {
             changing = true
         }
     }
 }
 
+apply plugin: 'scala'
 apply plugin: 'forge'
 apply plugin: 'haxe'
 apply plugin: 'maven-publish'
@@ -57,25 +58,25 @@ repositories {
 }
 
 sourceSets {
-    hx {
+    main {
         haxeopts {
             includePackage "dev.tilera.cwg"
             remapHaxePackage "dev.tilera.cwg.haxe"
         }
-    }
-    main {
         java {
-            srcDir 'src/main/java'
+            srcDirs = [
+                'src/main/java',
+                'src/api/java'
+            ]
         }
         resources {
-            srcDir 'src/main/resources'
+            srcDirs = [
+                'src/main/resources'
+            ]
         }
     }
 }
 
-configurations {
-    hxImplementation.extendsFrom implementation
-}
 
 dependencies {
     implementation "com.github.tox1cozZ:mixin-booter-legacy:1.1.2"
@@ -91,26 +92,13 @@ processResources {
     }
 }
 
-jar {
-    manifest {
-        attributes([
-                "FMLCorePlugin"           : "dev.tilera.cwg.core.CWGCorePlugin",
-                "FMLCorePluginContainsFMLMod": "true",
-                "FMLAT": "cwg_at.cfg"
-        ])
-    }
-    from sourceSets.hx.output
-}
-
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-    from sourceSets.hx.output
     classifier = 'deobf'
 }
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
-    from sourceSets.hx.allSource
     classifier = 'sources'
 }
 
