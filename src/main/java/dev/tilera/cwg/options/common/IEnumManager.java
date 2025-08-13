@@ -1,4 +1,4 @@
-package dev.tilera.cwg.api.utils;
+package dev.tilera.cwg.options.common;
 
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 

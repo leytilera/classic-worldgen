@@ -2,7 +2,7 @@ package dev.tilera.cwg.classic;
 
 import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
-import dev.tilera.cwg.api.utils.BooleanOption;
+import dev.tilera.cwg.options.common.BooleanOption;
 import dev.tilera.cwg.modules.IModule;
 
 public class ClassicModule implements IModule {

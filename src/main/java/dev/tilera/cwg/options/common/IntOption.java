@@ -1,4 +1,4 @@
-package dev.tilera.cwg.api.utils;
+package dev.tilera.cwg.options.common;
 
 import java.util.Map;
 

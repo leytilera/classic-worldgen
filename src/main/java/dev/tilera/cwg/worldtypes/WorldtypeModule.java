@@ -2,7 +2,7 @@ package dev.tilera.cwg.worldtypes;
 
 import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
-import dev.tilera.cwg.api.utils.StringOption;
+import dev.tilera.cwg.options.common.StringOption;
 import dev.tilera.cwg.modules.IModule;
 
 public class WorldtypeModule implements IModule {
