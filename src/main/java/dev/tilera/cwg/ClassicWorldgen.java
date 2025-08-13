@@ -27,6 +27,7 @@ import dev.tilera.cwg.infdev.InfdevModule;
 import dev.tilera.cwg.modules.IModule;
 import dev.tilera.cwg.noisegen.NoiseGeneratorOctavesFarlands;
 import dev.tilera.cwg.options.ConfigProvider;
+import dev.tilera.cwg.options.GlobalOptionManager;
 import dev.tilera.cwg.options.OptionRegistry;
 import dev.tilera.cwg.proxy.CommonProxy;
 import dev.tilera.cwg.quadrants.QuadrantsModule;
@@ -60,9 +61,8 @@ public class ClassicWorldgen {
         IGeneratorOptionRegistry optionRegistry = new OptionRegistry();
         CONFIG = new ConfigProvider(optionRegistry);
         CustomDimensions.INSTANCE = new CustomDimensions(optionRegistry);
-        CwgGlobals.setOptionRegistry(optionRegistry);
+        CwgGlobals.setOptionManager(new GlobalOptionManager(optionRegistry, new HookRegistry()));
         CwgGlobals.setDefaultProvider(CONFIG);
-        CwgGlobals.setHookRegistry(new HookRegistry());
         CwgGlobals.setCurrentState(null);
         HookTypes.init(CwgGlobals.getHookRegistry());
     }

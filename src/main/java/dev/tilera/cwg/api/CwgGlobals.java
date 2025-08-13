@@ -2,6 +2,7 @@ package dev.tilera.cwg.api;
 
 import dev.tilera.cwg.api.generator.AbstractChunkManager;
 import dev.tilera.cwg.api.hooks.IHookRegistry;
+import dev.tilera.cwg.api.options.IGeneratorOptionManager;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import net.minecraft.world.World;
@@ -9,8 +10,7 @@ import net.minecraft.world.World;
 public class CwgGlobals {
 
     private static IGeneratorOptionProvider defaultProvider = null;
-    private static IHookRegistry hookRegistry = null;
-    private static IGeneratorOptionRegistry optionRegistry = null;
+    private static IGeneratorOptionManager manager = null;
     private static World currentWorld = null;
 
     public static boolean isCwgWorld(World world) {
@@ -40,20 +40,20 @@ public class CwgGlobals {
         defaultProvider = provider;
     }
 
-    public static void setHookRegistry(IHookRegistry registry) {
-        hookRegistry = registry;
+    public static void setOptionManager(IGeneratorOptionManager manager) {
+        CwgGlobals.manager = manager;
+    }
+
+    public static IGeneratorOptionManager getOptionManager() {
+        return manager;
     }
 
     public static IHookRegistry getHookRegistry() {
-        return hookRegistry;
-    }
-
-    public static void setOptionRegistry(IGeneratorOptionRegistry registry) {
-        optionRegistry = registry;
+        return manager.getHookRegistry();
     }
 
     public static IGeneratorOptionRegistry getOptionRegistry() {
-        return optionRegistry;
+        return manager.getOptionRegistry();
     }
 
 }
