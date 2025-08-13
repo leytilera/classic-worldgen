@@ -5,8 +5,10 @@ import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.api.utils.BooleanOption;
 import dev.tilera.cwg.api.utils.IntOption;
+import dev.tilera.cwg.api.utils.StringOption;
 import dev.tilera.cwg.modules.IModule;
 import dev.tilera.cwg.options.ChunkManagerOption;
+import dev.tilera.cwg.options.ParentOption;
 import dev.tilera.cwg.vanilla.SingleBiomeChunkManagerFactory;
 import dev.tilera.cwg.vanilla.VanillaChunkManagerFactory;
 
@@ -32,6 +34,8 @@ public class DefaultModule implements IModule {
             new VanillaChunkManagerFactory(),
             CwgGlobals.getHookRegistry()
         ).registerDefault());
+        registry.registerOption(ParentOption.INSTANCE);
+        registry.registerOption(new StringOption("Name", "cwg:internal:name", "Options", true, false));
     }
 
     @Override
