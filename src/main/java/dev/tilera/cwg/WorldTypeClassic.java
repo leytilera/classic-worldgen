@@ -64,7 +64,15 @@ public class WorldTypeClassic extends WorldType implements IGeneratorOptionProvi
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getValue(String id, Class<T> type) {
-        if (id.equals("cwg:cavegen_hook")) {
+        if (Boolean.class.equals(type)) {
+            return (T) getBoolean(id);
+        } else if (Integer.class.equals(type)) {
+            return (T) getInt(id);
+        } else if (String.class.equals(type)) {
+            return (T) getString(id);
+        } else if (Double.class.equals(type)) {
+            return (T) getDouble(id);
+        } else if (id.equals("cwg:cavegen_hook")) {
             return (T) CwgGlobals.getHookRegistry().getHookProvider("cwg:swiss_cavegen");
         }
         return ClassicWorldgen.CONFIG.getValue(id, type);

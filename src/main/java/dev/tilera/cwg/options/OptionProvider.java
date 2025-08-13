@@ -28,30 +28,22 @@ public class OptionProvider implements IGeneratorOptionProvider {
 
     @Override
     public Integer getInt(String id) {
-        Integer res = getAs(Integer.class, id);
-        if (res == null) res = registry.getInt(id);
-        return res;
+        return getValue(id, Integer.class);
     }
 
     @Override
     public String getString(String id) {
-        String res = getAs(String.class, id);
-        if (res == null) res = registry.getString(id);
-        return res;
+        return getValue(id, String.class);
     }
 
     @Override
     public Double getDouble(String id) {
-        Double res = getAs(Double.class, id);
-        if (res == null) res = registry.getDouble(id);
-        return res;
+        return getValue(id, Double.class);
     }
 
     @Override
     public Boolean getBoolean(String id) {
-        Boolean res = getAs(Boolean.class, id);
-        if (res == null) res = registry.getBoolean(id);
-        return res;
+        return getValue(id, Boolean.class);
     }
 
     @Override
