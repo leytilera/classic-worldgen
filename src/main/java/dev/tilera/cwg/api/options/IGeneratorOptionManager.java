@@ -3,7 +3,9 @@ package dev.tilera.cwg.api.options;
 import dev.tilera.cwg.api.hooks.IHookRegistry;
 import net.minecraft.world.World;
 
+import java.util.Collection;
 import java.util.UUID;
+import java.util.concurrent.Future;
 
 public interface IGeneratorOptionManager {
 
@@ -22,6 +24,8 @@ public interface IGeneratorOptionManager {
 
     void saveOptions(UUID optionSet, IGeneratorOptionProvider options);
 
-    IGeneratorOptionManager getWorldOptionManager(World world);
+    Collection<UUID> getOptionSets();
+
+    Future<IGeneratorOptionManager> createWorldOptionManager(World world);
 
 }

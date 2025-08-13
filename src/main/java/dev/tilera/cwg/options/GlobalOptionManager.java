@@ -15,13 +15,13 @@ import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 public class GlobalOptionManager implements IGeneratorOptionManager {
 
-    private IObjectSerializer<ISerializedRead, JsonElement> jsonSerialier = new GsonSerializer(
+    public static IObjectSerializer<ISerializedRead, JsonElement> JSON_SERIALIZER = new GsonSerializer(
             new GsonBuilder()
                     .setPrettyPrinting()
                     .create()
@@ -30,7 +30,6 @@ public class GlobalOptionManager implements IGeneratorOptionManager {
     private IHookRegistry hookRegistry;
     private Map<UUID, IGeneratorOptionProvider> optionSets = new HashMap<>();
     private Map<UUID, String> optionSetFiles = new HashMap<>();
-    private Pair<World, IGeneratorOptionManager> currentWorld = null;
 
     public GlobalOptionManager(IGeneratorOptionRegistry optionRegistry, IHookRegistry hookRegistry) {
         this.optionRegistry = optionRegistry;
@@ -41,6 +40,7 @@ public class GlobalOptionManager implements IGeneratorOptionManager {
         optionSetFiles.put(CLASSIC, "builtin");
         optionSets.put(REGISTRY, optionRegistry);
         optionSets.put(CLASSIC, ClassicWorldgen.CLASSIC);
+        optionSets.put(CONFIG, ClassicWorldgen.CONFIG);
     }
 
     @Override
@@ -60,19 +60,34 @@ public class GlobalOptionManager implements IGeneratorOptionManager {
 
     @Override
     public IGeneratorOptionProvider getOptions(UUID optionSet) {
-        return null;
+        IGeneratorOptionProvider options = optionSets.get(optionSet);
+        if (options == null) {
+            options = optionSets.get(REGISTRY);
+        }
+        return options;
     }
 
     @Override
     public void saveOptions(UUID optionSet, IGeneratorOptionProvider options) {
-
+        optionSets.put(optionSet, options);
+        if (!optionSetFiles.containsKey(optionSet)) {
+            optionSetFiles.put(optionSet, "generated");
+        }
     }
 
     @Override
-    public IGeneratorOptionManager getWorldOptionManager(World world) {
-        if (currentWorld == null || !currentWorld.getLeft().equals(world)) {
-            currentWorld = new ImmutablePair<>(world, new WorldOptionManager(world, this));
-        }
-        return currentWorld.getRight();
+    public Collection<UUID> getOptionSets() {
+        return optionSets.keySet();
+    }
+
+    @Override
+    public Future<IGeneratorOptionManager> createWorldOptionManager(World world) {
+        WorldOptionManager manager = new WorldOptionManager(world, this);
+        FutureTask<IGeneratorOptionManager> task = new FutureTask<>(() -> {
+            manager.load();
+            return manager;
+        });
+        task.run();
+        return task;
     }
 }
