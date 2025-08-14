@@ -62,7 +62,6 @@ public class ClassicWorldgen {
         CONFIG = new ConfigProvider(optionRegistry);
         CustomDimensions.INSTANCE = new CustomDimensions(optionRegistry);
         CwgGlobals.setOptionManager(new GlobalOptionManager(optionRegistry, new HookRegistry()));
-        CwgGlobals.setDefaultProvider(CONFIG);
         CwgGlobals.setCurrentState(null);
         HookTypes.init(CwgGlobals.getHookRegistry());
     }

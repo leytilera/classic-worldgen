@@ -9,7 +9,6 @@ import net.minecraft.world.World;
 
 public class CwgGlobals {
 
-    private static IGeneratorOptionProvider defaultProvider = null;
     private static IGeneratorOptionManager manager = null;
     private static World currentWorld = null;
 
@@ -18,14 +17,13 @@ public class CwgGlobals {
     }
 
     public static IGeneratorOptionProvider getOptionProvider(World world) {
-        if (!isCwgWorld(world)) return defaultProvider;
+        if (!isCwgWorld(world)) return manager.getOptions(IGeneratorOptionManager.CONFIG);
         AbstractChunkManager chunkManager = (AbstractChunkManager) world.provider.worldChunkMgr;
         return chunkManager.getOptionProvider();
     }
 
     public static IGeneratorOptionProvider getOptionProvider() {
-        if (isCwgWorld(currentWorld)) return getOptionProvider(currentWorld); 
-        return defaultProvider;
+        return getOptionProvider(currentWorld);
     }
 
     public static void setCurrentState(World world) {
@@ -34,10 +32,6 @@ public class CwgGlobals {
 
     public static World getCurrentState() {
         return currentWorld;
-    }
-
-    public static void setDefaultProvider(IGeneratorOptionProvider provider) {
-        defaultProvider = provider;
     }
 
     public static void setOptionManager(IGeneratorOptionManager manager) {
