@@ -1,5 +1,6 @@
 package dev.tilera.cwg.hooks;
 
+import dev.tilera.cwg.api.hooks.common.IStructureGenHook;
 import net.minecraft.world.gen.structure.MapGenMineshaft;
 import net.minecraft.world.gen.structure.MapGenScatteredFeature;
 import net.minecraft.world.gen.structure.MapGenStronghold;

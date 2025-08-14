@@ -12,7 +12,7 @@ import dev.tilera.cwg.ClassicWorldgen;
 import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.hooks.IHookProvider;
 import dev.tilera.cwg.api.hooks.common.HookTypes;
-import dev.tilera.cwg.hooks.ITemperatureHook;
+import dev.tilera.cwg.api.hooks.common.ITemperatureHook;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.NoiseGeneratorPerlin;
 import scala.collection.mutable.StringBuilder;

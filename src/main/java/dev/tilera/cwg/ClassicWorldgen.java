@@ -22,7 +22,7 @@ import dev.tilera.cwg.dimensions.CustomDimensions;
 import dev.tilera.cwg.dimensions.DimProvider;
 import dev.tilera.cwg.hooks.HookRegistry;
 import dev.tilera.cwg.hooks.HooksModule;
-import dev.tilera.cwg.hooks.ICavegenHook;
+import dev.tilera.cwg.api.hooks.common.ICavegenHook;
 import dev.tilera.cwg.infdev.InfdevModule;
 import dev.tilera.cwg.modules.IModule;
 import dev.tilera.cwg.noisegen.NoiseGeneratorOctavesFarlands;

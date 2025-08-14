@@ -1,6 +1,7 @@
 package dev.tilera.cwg.hooks;
 
 import dev.tilera.cwg.api.CwgGlobals;
+import dev.tilera.cwg.api.hooks.common.ITemperatureHook;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.NoiseGeneratorPerlin;
 

@@ -7,7 +7,7 @@ import dev.tilera.cwg.api.hooks.IHookProvider;
 import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IOption;
-import dev.tilera.cwg.hooks.ICavegenHook;
+import dev.tilera.cwg.api.hooks.common.ICavegenHook;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.WorldChunkManagerHell;

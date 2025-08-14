@@ -1,5 +1,6 @@
 package dev.tilera.cwg.hooks;
 
+import dev.tilera.cwg.api.hooks.common.ICavegenHook;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.MapGenCaves;
 import net.minecraft.world.gen.MapGenRavine;

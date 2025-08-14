@@ -58,6 +58,13 @@ repositories {
 }
 
 sourceSets {
+    api {
+        java {
+            srcDirs = [
+                'src/api/java'
+            ]
+        }
+    }
     main {
         haxeopts {
             includePackage "dev.tilera.cwg"
@@ -65,8 +72,7 @@ sourceSets {
         }
         java {
             srcDirs = [
-                'src/main/java',
-                'src/api/java'
+                'src/main/java'
             ]
         }
         resources {
@@ -92,15 +98,36 @@ processResources {
     }
 }
 
+jar {
+    manifest {
+        attributes([
+                "FMLCorePlugin"           : "dev.tilera.cwg.core.CWGCorePlugin",
+                "FMLCorePluginContainsFMLMod": "true",
+                "FMLAT": "cwg_at.cfg"
+        ])
+    }
+    from sourceSets.api.output
+}
+
 task deobfJar(type: Jar) {
     from sourceSets.main.output
+    from sourceSets.api.output
     classifier = 'deobf'
 }
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
+    from sourceSets.api.allSource
     classifier = 'sources'
 }
+
+task apiJar(type: Jar) {
+    from sourceSets.api.output
+    classifier = 'api'
+}
+
+sourceSets.main.compileClasspath += files(tasks.named('apiJar'))
+sourceSets.main.runtimeClasspath += files(tasks.named('apiJar'))
 
 publishing {
     tasks.publish.dependsOn 'build'
@@ -111,6 +138,7 @@ publishing {
             artifact deobfJar
             artifact sourcesJar
             artifact jar
+            artifact apiJar
         }
     }
 

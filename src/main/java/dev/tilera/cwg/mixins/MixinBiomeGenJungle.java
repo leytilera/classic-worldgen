@@ -5,7 +5,6 @@ import java.util.Random;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-import dev.tilera.cwg.ClassicWorldgen;
 import dev.tilera.cwg.api.CwgGlobals;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;

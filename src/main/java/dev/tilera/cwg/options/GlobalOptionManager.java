@@ -12,8 +12,6 @@ import dev.tilera.cwg.api.serialize.IObjectSerializer;
 import dev.tilera.cwg.api.serialize.ISerializedRead;
 import dev.tilera.cwg.serialize.GsonSerializer;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
 import java.util.concurrent.Future;

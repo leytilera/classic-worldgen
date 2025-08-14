@@ -1,4 +1,4 @@
-package dev.tilera.cwg.hooks;
+package dev.tilera.cwg.api.hooks.common;
 
 import dev.tilera.cwg.api.hooks.IHookProvider;
 import net.minecraft.world.gen.ChunkProviderGenerate;

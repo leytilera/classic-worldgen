@@ -4,9 +4,6 @@ import dev.tilera.cwg.api.generator.IChunkManagerFactory;
 import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.hooks.IHookType;
 import dev.tilera.cwg.api.hooks.IHookTypeManager;
-import dev.tilera.cwg.hooks.ICavegenHook;
-import dev.tilera.cwg.hooks.IStructureGenHook;
-import dev.tilera.cwg.hooks.ITemperatureHook;
 
 public class HookTypes {
 
