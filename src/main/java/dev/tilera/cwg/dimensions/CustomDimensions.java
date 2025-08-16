@@ -17,6 +17,7 @@ import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.api.serialize.IObjectManipulator;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 import dev.tilera.cwg.api.serialize.ISerializedRead;
+import dev.tilera.cwg.modules.Module;
 import dev.tilera.cwg.options.common.IntOption;
 import dev.tilera.cwg.options.common.StringOption;
 import dev.tilera.cwg.modules.IModule;
@@ -27,6 +28,7 @@ import dev.tilera.cwg.serialize.GsonManipulator;
 import dev.tilera.cwg.serialize.GsonSerializer;
 import net.minecraftforge.common.DimensionManager;
 
+@Module
 public class CustomDimensions implements IModule {
 
     public static CustomDimensions INSTANCE;
@@ -35,11 +37,6 @@ public class CustomDimensions implements IModule {
     private IObjectSerializer<JsonElement, IGeneratorOptionProvider> optionSerializer;
     private IObjectSerializer<String, JsonElement> base64JsonSerializer = new CombinedSerializer<>(Base64Encoder.INSTANCE, GsonSerializer.STRING);
     private IObjectSerializer<String, IGeneratorOptionProvider> base64OptionSerializer;
-
-    public CustomDimensions(IGeneratorOptionRegistry registry) {
-        this.optionSerializer = new OptionSerializer<>(manipulator, registry, registry);
-        this.base64OptionSerializer = new CombinedSerializer<>(base64JsonSerializer, optionSerializer);
-    }
 
     public IGeneratorOptionProvider getDimensionOptions(int id) {
         return dimensions.get(id);
@@ -101,6 +98,9 @@ public class CustomDimensions implements IModule {
 
     @Override
     public void registerOptions(IGeneratorOptionRegistry registry) {
+        INSTANCE = this;
+        this.optionSerializer = new OptionSerializer<>(manipulator, registry, registry);
+        this.base64OptionSerializer = new CombinedSerializer<>(base64JsonSerializer, optionSerializer);
         registry.registerOption(new StringOption("cwg:dimensions:name", "Dimension Name", "Custom Dimension", true, false));
         registry.registerOption(new IntOption("cwg:dimensions:provider", "Provider ID", Config.dimensionProviderID, true, false));
     }
