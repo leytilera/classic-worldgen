@@ -6,8 +6,6 @@ public interface IGeneratorOptionRegistry extends IGeneratorOptionProvider {
     
    void registerOption(IOption<?> option);
 
-   Set<String> getRegisteredOptions();
-
    String encodeOptions(IGeneratorOptionProvider provider);
 
    IGeneratorOptionProvider decodeOptions(String options);
@@ -17,10 +15,5 @@ public interface IGeneratorOptionRegistry extends IGeneratorOptionProvider {
    <T> IOption<T> getOption(String id, Class<T> type);
 
    Class<?> getOptionType(String id);
-
-   @Override
-   default IGeneratorOptionRegistry getRegistry() {
-      return this;
-   }
 
 }

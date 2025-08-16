@@ -2,6 +2,8 @@ package dev.tilera.cwg.api.options;
 
 import dev.tilera.cwg.api.CwgGlobals;
 
+import java.util.Collection;
+
 public interface IGeneratorOptionProvider {
     
     Integer getInt(String id);
@@ -14,8 +16,6 @@ public interface IGeneratorOptionProvider {
 
     <T> T getValue(String id, Class<T> type);
 
-    default IGeneratorOptionRegistry getRegistry() {
-        return CwgGlobals.getOptionRegistry();
-    }
+    Collection<String> getOptions();
 
 }

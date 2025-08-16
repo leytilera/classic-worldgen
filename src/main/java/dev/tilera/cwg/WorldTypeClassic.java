@@ -10,6 +10,8 @@ import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraft.world.chunk.IChunkProvider;
 
+import java.util.*;
+
 public class WorldTypeClassic extends WorldType implements IGeneratorOptionProvider {
 
     private static ClassicChunkManagerFactory factory = new ClassicChunkManagerFactory();
@@ -76,6 +78,17 @@ public class WorldTypeClassic extends WorldType implements IGeneratorOptionProvi
             return (T) CwgGlobals.getHookRegistry().getHookProvider("cwg:swiss_cavegen");
         }
         return ClassicWorldgen.CONFIG.getValue(id, type);
+    }
+
+    @Override
+    public Collection<String> getOptions() {
+        return Arrays.asList(
+                "cwg:cavegen_hook",
+                "cwg:classic_extreme_hills",
+                "cwg:disable_jungle_melons",
+                "cwg:disable_new_flowers",
+                "cwg:disable_tall_flowers"
+        );
     }
 
 }

@@ -1,18 +1,20 @@
 package dev.tilera.cwg.options;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 
 public class OptionProvider implements IGeneratorOptionProvider {
 
-    private IGeneratorOptionProvider registry;
+    private IReference<IGeneratorOptionProvider> parent;
     private Map<String, Object> storage = new HashMap<>();
 
-    public OptionProvider(IGeneratorOptionProvider registry) {
-        this.registry = registry;
+    public OptionProvider(IReference<IGeneratorOptionProvider> parent) {
+        this.parent = parent;
     }
 
     @SuppressWarnings("unchecked")
@@ -49,8 +51,13 @@ public class OptionProvider implements IGeneratorOptionProvider {
     @Override
     public <T> T getValue(String id, Class<T> type) {
         T res = getAs(type, id);
-        if (res == null) res = registry.getValue(id, type);
+        if (res == null) res = parent.apply(p -> p.getValue(id, type));
         return res;
+    }
+
+    @Override
+    public Set<String> getOptions() {
+        return storage.keySet();
     }
 
     public void putInt(String id, Integer value) {
@@ -71,11 +78,6 @@ public class OptionProvider implements IGeneratorOptionProvider {
 
     public void putValue(String id, Object value) {
         storage.put(id, value);
-    }
-
-    @Override
-    public IGeneratorOptionRegistry getRegistry() {
-        return registry.getRegistry();
     }
     
 }

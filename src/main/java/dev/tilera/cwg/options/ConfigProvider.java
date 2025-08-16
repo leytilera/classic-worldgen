@@ -5,6 +5,10 @@ import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
 public class ConfigProvider implements IGeneratorOptionProvider {
 
     private IGeneratorOptionProvider parent;
@@ -60,8 +64,17 @@ public class ConfigProvider implements IGeneratorOptionProvider {
     }
 
     @Override
-    public IGeneratorOptionRegistry getRegistry() {
-        return parent.getRegistry();
+    public Collection<String> getOptions() {
+        return Arrays.asList(
+                "cwg:cavegen_hook",
+                "cwg:classic_extreme_hills",
+                "cwg:farlands",
+                "cwg:desert_lakes",
+                "cwg:generator.classic:disableJungle",
+                "cwg:generator.classic:newVanillaBiomes",
+                "cwg:generator.classic:disableModdedBiomes",
+                "cwg:generator.classic:enableModdedWorldgen"
+        );
     }
     
 }

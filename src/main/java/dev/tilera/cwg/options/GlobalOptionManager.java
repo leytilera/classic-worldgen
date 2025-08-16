@@ -8,6 +8,7 @@ import dev.tilera.cwg.api.options.IGeneratorOptionManager;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.api.options.IOptionBuilder;
+import dev.tilera.cwg.api.serialize.IObjectManipulator;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 import dev.tilera.cwg.api.serialize.ISerializedRead;
 import dev.tilera.cwg.serialize.GsonSerializer;
@@ -28,6 +29,7 @@ public class GlobalOptionManager implements IGeneratorOptionManager {
     private IHookRegistry hookRegistry;
     private Map<UUID, IGeneratorOptionProvider> optionSets = new HashMap<>();
     private Map<UUID, String> optionSetFiles = new HashMap<>();
+    private Map<UUID, IMutableReference<IGeneratorOptionProvider>> missing = new HashMap<>();
 
     public GlobalOptionManager(IGeneratorOptionRegistry optionRegistry, IHookRegistry hookRegistry) {
         this.optionRegistry = optionRegistry;
@@ -71,6 +73,10 @@ public class GlobalOptionManager implements IGeneratorOptionManager {
         if (!optionSetFiles.containsKey(optionSet)) {
             optionSetFiles.put(optionSet, "generated");
         }
+        if (missing.containsKey(optionSet)) {
+            IMutableReference<IGeneratorOptionProvider> ref = missing.remove(optionSet);
+            ref.set(options);
+        }
     }
 
     @Override
@@ -87,5 +93,21 @@ public class GlobalOptionManager implements IGeneratorOptionManager {
         });
         task.run();
         return task;
+    }
+
+    @Override
+    public <E> IObjectSerializer<E, IGeneratorOptionProvider> createSerializer(IObjectManipulator<E> manipulator) {
+        return new OptionSerializerV2<>(manipulator, this);
+    }
+
+    public IReference<IGeneratorOptionProvider> getReference(UUID id) {
+        if (optionSets.containsKey(id)) {
+            return new Pointer<>(optionSets.get(id));
+        } else if (missing.containsKey(id)) {
+            return missing.get(id);
+        } else {
+            missing.put(id, new Pointer<>(optionRegistry));
+            return missing.get(id);
+        }
     }
 }

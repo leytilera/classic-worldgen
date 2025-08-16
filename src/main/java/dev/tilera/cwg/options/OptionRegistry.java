@@ -32,7 +32,7 @@ public class OptionRegistry implements IGeneratorOptionRegistry {
     }
 
     @Override
-    public Set<String> getRegisteredOptions() {
+    public Set<String> getOptions() {
         return registry.keySet();
     }
 
