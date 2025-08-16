@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 
 import dev.tilera.cwg.Config;
 import dev.tilera.cwg.api.hooks.IHookRegistry;
+import dev.tilera.cwg.api.options.IGeneratorOptionManager;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.api.serialize.IObjectManipulator;
@@ -94,18 +95,16 @@ public class CustomDimensions implements IModule {
     }
 
     @Override
-    public void registerGenerators(IHookRegistry registry) {}
-
-    @Override
-    public void registerOptions(IGeneratorOptionRegistry registry) {
+    public void init(IGeneratorOptionManager manager) {
         INSTANCE = this;
+        IGeneratorOptionRegistry registry = manager.getOptionRegistry();
         this.optionSerializer = new OptionSerializer<>(manipulator, registry, registry);
         this.base64OptionSerializer = new CombinedSerializer<>(base64JsonSerializer, optionSerializer);
         registry.registerOption(new StringOption("cwg:dimensions:name", "Dimension Name", "Custom Dimension", true, false));
         registry.registerOption(new IntOption("cwg:dimensions:provider", "Provider ID", Config.dimensionProviderID, true, false));
+        DimensionManager.registerProviderType(Config.dimensionProviderID, DimProvider.class, false);
+        this.readConfig(Config.dimensionsDefinition);
+        this.registerDimensions();
     }
-
-    @Override
-    public void registerHooks(IHookRegistry registry) {}
     
 }

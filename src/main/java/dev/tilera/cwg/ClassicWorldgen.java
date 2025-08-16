@@ -17,8 +17,6 @@ import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.biome.Biomes;
 import dev.tilera.cwg.command.CommandChangeWorld;
-import dev.tilera.cwg.dimensions.CustomDimensions;
-import dev.tilera.cwg.dimensions.DimProvider;
 import dev.tilera.cwg.hooks.HookRegistry;
 import dev.tilera.cwg.api.hooks.common.ICavegenHook;
 import dev.tilera.cwg.modules.IModule;
@@ -31,7 +29,6 @@ import dev.tilera.cwg.proxy.CommonProxy;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.NoiseGenerator;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.event.terraingen.InitNoiseGensEvent;
@@ -68,29 +65,13 @@ public class ClassicWorldgen {
         Biomes.init();
         MinecraftForge.TERRAIN_GEN_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(this);
-        registerGenerators();
-        registerOptions();
-        registerHooks();
-        DimensionManager.registerProviderType(Config.dimensionProviderID, DimProvider.class, false);
-        CustomDimensions.INSTANCE.readConfig(Config.dimensionsDefinition);
-        CustomDimensions.INSTANCE.registerDimensions();
+        initModules();
+
     }
 
-    public void registerOptions() {
-        for(IModule module : modules) {
-            module.registerOptions(CwgGlobals.getOptionRegistry());
-        }
-    }
-
-    public void registerHooks() {
-        for(IModule module : modules) {
-            module.registerHooks(CwgGlobals.getHookRegistry());
-        }
-    }
-
-    public void registerGenerators() {
-        for(IModule module : modules) {
-            module.registerGenerators(CwgGlobals.getHookRegistry());
+    public void initModules() {
+        for (IModule module : modules) {
+            module.init(CwgGlobals.getOptionManager());
         }
     }
 
