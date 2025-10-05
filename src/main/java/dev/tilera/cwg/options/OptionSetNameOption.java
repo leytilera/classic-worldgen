@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import dev.tilera.cwg.api.options.IOption;
-import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 import dev.tilera.cwg.serialize.OptionalSerializer;
 import dev.tilera.cwg.serialize.StringSerializer;
@@ -50,7 +50,7 @@ public class OptionSetNameOption implements IOption<Optional<String>> {
     }
 
     @Override
-    public <E> IObjectSerializer<E, Optional<String>> getSerializer(IObjectManipulator<E> manipulator) {
+    public <E> IObjectSerializer<E, Optional<String>> getSerializer(IObjectType<E> manipulator) {
         return new OptionalSerializer<>(new StringSerializer<>(manipulator), manipulator);
     }
     

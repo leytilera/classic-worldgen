@@ -1,5 +1,7 @@
 package dev.tilera.cwg.serialize;
 
+import java.util.stream.IntStream;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -7,43 +9,172 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectSerializer;
+import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.RepresentationType;
 
-public class GsonManipulator implements IObjectManipulator<JsonElement> {
+public class GsonManipulator implements IObjectType<JsonElement> {
 
-    @Override
-    public JsonElement createPrimitive(String string) {
-        return new JsonPrimitive(string);
-    }
+    private final IObjectSerializer<JsonElement, String> stringSerializer = new IObjectSerializer<JsonElement, String>() {
 
-    @Override
-    public JsonElement createPrimitive(boolean bool) {
-        return new JsonPrimitive(bool);
-    }
+        @Override
+        public JsonElement serialize(String object) {
+            return new JsonPrimitive(object);
+        }
 
-    @Override
-    public JsonElement createPrimitive(int integer) {
-        return new JsonPrimitive(integer);
-    }
+        @Override
+        public String deserialize(JsonElement encoded) throws IllegalArgumentException {
+            try {
+                return encoded.getAsString();
+            } catch(Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+        
+    };
+    private final IObjectSerializer<JsonElement, Boolean> booleanSerializer = new IObjectSerializer<JsonElement, Boolean>() {
 
-    @Override
-    public JsonElement createPrimitive(double d) {
-        return new JsonPrimitive(d);
-    }
+        @Override
+        public JsonElement serialize(Boolean object) {
+            return new JsonPrimitive(object);
+        }
+
+        @Override
+        public Boolean deserialize(JsonElement encoded) throws IllegalArgumentException {
+            try {
+                return encoded.getAsBoolean();
+            } catch(Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+        
+    };
+    private final IObjectSerializer<JsonElement, Long> integerSerializer = new IObjectSerializer<JsonElement, Long>() {
+
+        @Override
+        public JsonElement serialize(Long object) {
+            return new JsonPrimitive(object);
+        }
+
+        @Override
+        public Long deserialize(JsonElement encoded) throws IllegalArgumentException {
+            try {
+                return encoded.getAsLong();
+            } catch(Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+        
+    };
+    private final IObjectSerializer<JsonElement, Double> floatSerializer = new IObjectSerializer<JsonElement, Double>() {
+
+        @Override
+        public JsonElement serialize(Double object) {
+            return new JsonPrimitive(object);
+        }
+
+        @Override
+        public Double deserialize(JsonElement encoded) throws IllegalArgumentException {
+            try {
+                return encoded.getAsDouble();
+            } catch(Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+        
+    };
+    private final IObjectManipulator<JsonElement, Integer> arrayManipulator = new IObjectManipulator<JsonElement, Integer>() {
+
+        @Override
+        public JsonElement get(JsonElement object, Integer index) throws IllegalArgumentException, IndexOutOfBoundsException {
+            try {
+                return object.getAsJsonArray().get(index);
+            } catch(IllegalStateException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+
+        @Override
+        public JsonElement set(JsonElement object, Integer index, JsonElement value) throws IllegalArgumentException {
+            // TODO: Nicht sehr Alecgant.
+            if (index != getSize(object)) throw new IllegalArgumentException("Can only append to GSON arrays");
+            try {
+                object.getAsJsonArray().add(value);
+                return object;
+            } catch(Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+
+        @Override
+        public int getSize(JsonElement object) {
+            try {
+                return object.getAsJsonArray().size();
+            } catch(Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+
+        @Override
+        public Integer[] getIndices(JsonElement object) {
+            return IntStream.range(0, getSize(object)).boxed().toArray(Integer[]::new);
+        }
+
+        @Override
+        public JsonElement create() {
+            return new JsonArray();
+        }
+        
+    };
+    private final IObjectManipulator<JsonElement, String> objectManipulator = new IObjectManipulator<JsonElement, String>() {
+
+        @Override
+        public JsonElement get(JsonElement object, String index) throws IllegalArgumentException, IndexOutOfBoundsException {
+            try {
+                return object.getAsJsonObject().get(index);
+            } catch(Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+
+        @Override
+        public JsonElement set(JsonElement object, String index, JsonElement value) throws IllegalArgumentException {
+            try {
+                object.getAsJsonObject().add(index, value);
+                return object;
+            } catch(Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+
+        @Override
+        public int getSize(JsonElement object) {
+            try {
+                return object.getAsJsonObject().entrySet().size();
+            } catch(Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+
+        @Override
+        public String[] getIndices(JsonElement object) {
+            try {
+                return object.getAsJsonObject().entrySet().stream().map((e) -> e.getKey()).toArray(String[]::new);
+            } catch(Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+
+        @Override
+        public JsonElement create() {
+            return new JsonObject();
+        }
+        
+    };
 
     @Override
     public JsonElement createNull() {
         return JsonNull.INSTANCE;
-    }
-
-    @Override
-    public JsonElement createObject() {
-        return new JsonObject();
-    }
-
-    @Override
-    public JsonElement createArray() {
-        return new JsonArray();
     }
 
     @Override
@@ -58,7 +189,7 @@ public class GsonManipulator implements IObjectManipulator<JsonElement> {
                 return object.isJsonArray();
             case BOOLEAN:
                 return object.isJsonPrimitive() && object.getAsJsonPrimitive().isBoolean();
-            case DOUBLE:
+            case FLOAT:
             case INTEGER:
                 return object.isJsonPrimitive() && object.getAsJsonPrimitive().isNumber();
             case OBJECT:
@@ -72,97 +203,33 @@ public class GsonManipulator implements IObjectManipulator<JsonElement> {
     }
 
     @Override
-    public String asString(JsonElement object) throws IllegalArgumentException {
-        try {
-            return object.getAsString();
-        } catch(Exception e) {
-            throw new IllegalArgumentException(e);
-        }
+    public IObjectSerializer<JsonElement, String> strings() {
+        return this.stringSerializer;
     }
 
     @Override
-    public boolean asBoolean(JsonElement object) throws IllegalArgumentException {
-        try {
-            return object.getAsBoolean();
-        } catch(Exception e) {
-            throw new IllegalArgumentException(e);
-        }
+    public IObjectSerializer<JsonElement, Boolean> booleans() {
+        return this.booleanSerializer;
     }
 
     @Override
-    public int asInteger(JsonElement object) throws IllegalArgumentException {
-        try {
-            return object.getAsInt();
-        } catch(Exception e) {
-            throw new IllegalArgumentException(e);
-        }
+    public IObjectSerializer<JsonElement, Long> integers() {
+        return this.integerSerializer;
     }
 
     @Override
-    public double asDouble(JsonElement object) throws IllegalArgumentException {
-        try {
-            return object.getAsDouble();
-        } catch(Exception e) {
-            throw new IllegalArgumentException(e);
-        }
+    public IObjectSerializer<JsonElement, Double> floats() {
+        return this.floatSerializer;
     }
 
     @Override
-    public JsonElement getProperty(JsonElement object, String name) throws IllegalArgumentException {
-        try {
-            return object.getAsJsonObject().get(name);
-        } catch(Exception e) {
-            throw new IllegalArgumentException(e);
-        }
+    public IObjectManipulator<JsonElement, Integer> arrays() {
+        return this.arrayManipulator;
     }
 
     @Override
-    public JsonElement getIndex(JsonElement object, int index) throws IllegalArgumentException, IndexOutOfBoundsException {
-        try {
-            return object.getAsJsonArray().get(index);
-        } catch(IllegalStateException e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
-
-    @Override
-    public JsonElement setProperty(JsonElement object, String name, JsonElement property) throws IllegalArgumentException {
-        try {
-            object.getAsJsonObject().add(name, property);
-            return object;
-        } catch(Exception e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
-
-    @Override
-    public JsonElement setIndex(JsonElement object, int index, JsonElement value) throws IllegalArgumentException {
-        // TODO: Nicht sehr Alecgant.
-        if (index != getSize(object)) throw new IllegalArgumentException("Can only append to GSON arrays");
-        try {
-            object.getAsJsonArray().add(value);
-            return object;
-        } catch(Exception e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
-
-    @Override
-    public String[] getProperties(JsonElement object) throws IllegalArgumentException {
-        try {
-            return object.getAsJsonObject().entrySet().stream().map((e) -> e.getKey()).toArray(String[]::new);
-        } catch(Exception e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
-
-    @Override
-    public int getSize(JsonElement object) throws IllegalArgumentException {
-        try {
-            return object.getAsJsonArray().size();
-        } catch(Exception e) {
-            throw new IllegalArgumentException(e);
-        }
+    public IObjectManipulator<JsonElement, String> objects() {
+        return this.objectManipulator;
     }
     
 }

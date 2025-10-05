@@ -6,16 +6,16 @@ import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.api.options.IOption;
-import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 
 public class OptionSerializer<T> implements IObjectSerializer<T, IGeneratorOptionProvider> {
 
-    private IObjectManipulator<T> manipulator;
+    private IObjectType<T> manipulator;
     private IGeneratorOptionProvider defaults;
     private IGeneratorOptionRegistry registry;
 
-    public OptionSerializer(IObjectManipulator<T> manipulator, IGeneratorOptionProvider defaults,
+    public OptionSerializer(IObjectType<T> manipulator, IGeneratorOptionProvider defaults,
             IGeneratorOptionRegistry registry) {
         this.manipulator = manipulator;
         this.defaults = defaults;
@@ -35,7 +35,7 @@ public class OptionSerializer<T> implements IObjectSerializer<T, IGeneratorOptio
 
     @Override
     public T serialize(IGeneratorOptionProvider object) {
-        T json = manipulator.createObject();
+        T json = manipulator.objects().create();
         IChunkManagerFactory generator = object.getValue("cwg:generator", IHookProvider.class).getHook(HookTypes.GENERATOR);
         for (String id : registry.getOptions()) {
             Class<?> clazz = registry.getOptionType(id);
@@ -46,7 +46,7 @@ public class OptionSerializer<T> implements IObjectSerializer<T, IGeneratorOptio
                 continue;
             } else{
                 T property = serializeOption(o, id, object);
-                json = manipulator.setProperty(json, id, property);
+                json = manipulator.objects().set(json, id, property);
             } 
         }
         return json;
@@ -56,8 +56,8 @@ public class OptionSerializer<T> implements IObjectSerializer<T, IGeneratorOptio
     public IGeneratorOptionProvider deserialize(T encoded) throws IllegalArgumentException {
         T json = encoded;
         OptionProvider provider = new OptionProvider(new Pointer<>(defaults));
-        for (String prop : manipulator.getProperties(json)) {
-            T value = manipulator.getProperty(json, prop);
+        for (String prop : manipulator.objects().getIndices(json)) {
+            T value = manipulator.objects().get(json, prop);
             if (manipulator.isNull(value)) continue;
             IOption<?> o = registry.getOption(prop, registry.getOptionType(prop));
             if (o == null) {

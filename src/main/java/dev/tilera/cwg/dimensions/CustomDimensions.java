@@ -15,7 +15,7 @@ import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.options.IGeneratorOptionManager;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
-import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 import dev.tilera.cwg.api.serialize.ISerializedRead;
 import dev.tilera.cwg.modules.Module;
@@ -34,7 +34,7 @@ public class CustomDimensions implements IModule {
 
     public static CustomDimensions INSTANCE;
     private Map<Integer, IGeneratorOptionProvider> dimensions = new HashMap<>();
-    private IObjectManipulator<JsonElement> manipulator = new GsonManipulator();
+    private IObjectType<JsonElement> manipulator = new GsonManipulator();
     private IObjectSerializer<JsonElement, IGeneratorOptionProvider> optionSerializer;
     private IObjectSerializer<String, JsonElement> base64JsonSerializer = new CombinedSerializer<>(Base64Encoder.INSTANCE, GsonSerializer.STRING);
     private IObjectSerializer<String, IGeneratorOptionProvider> base64OptionSerializer;

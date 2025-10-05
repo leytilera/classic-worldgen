@@ -4,10 +4,12 @@ import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.generator.AbstractChunkManager;
 import dev.tilera.cwg.api.hooks.IHookProvider;
 import dev.tilera.cwg.api.hooks.common.HookTypes;
+import dev.tilera.cwg.api.options.IGeneratorOptionManager;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.gui.GuiCustomize;
 import dev.tilera.cwg.options.OptionProvider;
+import dev.tilera.cwg.options.Pointer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiCreateWorld;
 import net.minecraft.world.World;
@@ -57,8 +59,8 @@ public class WorldTypeCustom extends WorldType {
 
     @Override
     public void onCustomizeButton(Minecraft instance, GuiCreateWorld guiCreateWorld) {
-        IGeneratorOptionRegistry registry = CwgGlobals.getOptionRegistry();
-        instance.displayGuiScreen(new GuiCustomize(registry, guiCreateWorld, new OptionProvider(registry)));
+        IGeneratorOptionManager manager = CwgGlobals.getOptionManager();
+        instance.displayGuiScreen(new GuiCustomize(manager, guiCreateWorld, new OptionProvider(new Pointer<>(manager.getOptionRegistry()))));
     }
 
 }

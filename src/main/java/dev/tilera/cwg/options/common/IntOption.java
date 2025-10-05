@@ -3,7 +3,7 @@ package dev.tilera.cwg.options.common;
 import java.util.Map;
 
 import dev.tilera.cwg.api.options.IOption;
-import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 import dev.tilera.cwg.serialize.IntSerializer;
 
@@ -70,7 +70,7 @@ public class IntOption implements IOption<Integer> {
     }
 
     @Override
-    public <E> IObjectSerializer<E, Integer> getSerializer(IObjectManipulator<E> manipulator) {
+    public <E> IObjectSerializer<E, Integer> getSerializer(IObjectType<E> manipulator) {
         return new IntSerializer<>(manipulator);
     }
     

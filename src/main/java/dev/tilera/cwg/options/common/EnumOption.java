@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dev.tilera.cwg.api.options.IOption;
-import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 import dev.tilera.cwg.serialize.CombinedSerializer;
 import dev.tilera.cwg.serialize.IntSerializer;
@@ -65,7 +65,7 @@ public class EnumOption<T extends Enum<T>> implements IOption<T> {
     }
 
     @Override
-    public <E> IObjectSerializer<E, T> getSerializer(IObjectManipulator<E> manipulator) {
+    public <E> IObjectSerializer<E, T> getSerializer(IObjectType<E> manipulator) {
         return new CombinedSerializer<>(new IntSerializer<>(manipulator), enumManager);
     }
     

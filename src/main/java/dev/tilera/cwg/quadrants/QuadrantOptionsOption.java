@@ -5,7 +5,7 @@ import java.util.Map;
 import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IOption;
-import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 import dev.tilera.cwg.options.OptionSerializer;
 
@@ -60,7 +60,7 @@ public class QuadrantOptionsOption implements IOption<IGeneratorOptionProvider> 
     }
 
     @Override
-    public <E> IObjectSerializer<E, IGeneratorOptionProvider> getSerializer(IObjectManipulator<E> manipulator) {
+    public <E> IObjectSerializer<E, IGeneratorOptionProvider> getSerializer(IObjectType<E> manipulator) {
         return new OptionSerializer<>(manipulator, getDefault(), CwgGlobals.getOptionRegistry());
     }   
     

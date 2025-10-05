@@ -2,15 +2,15 @@ package dev.tilera.cwg.serialize;
 
 import java.util.Optional;
 
-import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 
 public class OptionalSerializer<T, S> implements IObjectSerializer<T, Optional<S>> {
 
     IObjectSerializer<T, S> subSerializer;
-    IObjectManipulator<T> manipulator;
+    IObjectType<T> manipulator;
 
-    public OptionalSerializer(IObjectSerializer<T, S> subSerializer, IObjectManipulator<T> manipulator) {
+    public OptionalSerializer(IObjectSerializer<T, S> subSerializer, IObjectType<T> manipulator) {
         this.subSerializer = subSerializer;
         this.manipulator = manipulator;
     }

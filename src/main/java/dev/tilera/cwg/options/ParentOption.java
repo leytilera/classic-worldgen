@@ -2,7 +2,7 @@ package dev.tilera.cwg.options;
 
 import dev.tilera.cwg.api.options.IGeneratorOptionManager;
 import dev.tilera.cwg.api.options.IOption;
-import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 import dev.tilera.cwg.serialize.CombinedSerializer;
 import dev.tilera.cwg.serialize.StringSerializer;
@@ -52,7 +52,7 @@ public class ParentOption implements IOption<UUID> {
     }
 
     @Override
-    public <E> IObjectSerializer<E, UUID> getSerializer(IObjectManipulator<E> manipulator) {
+    public <E> IObjectSerializer<E, UUID> getSerializer(IObjectType<E> manipulator) {
         return new CombinedSerializer<>(new StringSerializer<>(manipulator), UUIDSerializer.INSTANCE);
     }
 }

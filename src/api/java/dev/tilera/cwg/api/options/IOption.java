@@ -2,7 +2,7 @@ package dev.tilera.cwg.api.options;
 
 import java.util.Map;
 
-import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 
 public interface IOption<T> {
@@ -21,7 +21,7 @@ public interface IOption<T> {
 
     T decodeString(String input);
 
-    <E> IObjectSerializer<E, T> getSerializer(IObjectManipulator<E> manipulator);
+    <E> IObjectSerializer<E, T> getSerializer(IObjectType<E> manipulator);
 
     default boolean isGeneratorSpecific() {
         return false;

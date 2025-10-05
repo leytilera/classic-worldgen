@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.api.options.IOption;
-import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 import dev.tilera.cwg.serialize.Base64Encoder;
 import dev.tilera.cwg.serialize.CombinedSerializer;
@@ -22,7 +22,7 @@ public class OptionRegistry implements IGeneratorOptionRegistry {
     private Map<String, IOption<?>> registry = new HashMap<>();
     private IObjectSerializer<String, JsonElement> gsonSerializer = GsonSerializer.STRING;
     private IObjectSerializer<String, JsonElement> base64JsonSerializer = new CombinedSerializer<>(Base64Encoder.INSTANCE, gsonSerializer);
-    private IObjectManipulator<JsonElement> manipulator = new GsonManipulator();
+    private IObjectType<JsonElement> manipulator = new GsonManipulator();
     private IObjectSerializer<JsonElement, IGeneratorOptionProvider> optionSerializer = new OptionSerializer<JsonElement>(manipulator, this, this);
     private IObjectSerializer<String, IGeneratorOptionProvider> base64OptionSerializer = new CombinedSerializer<>(base64JsonSerializer, optionSerializer);
 

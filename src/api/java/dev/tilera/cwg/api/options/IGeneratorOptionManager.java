@@ -1,7 +1,7 @@
 package dev.tilera.cwg.api.options;
 
 import dev.tilera.cwg.api.hooks.IHookRegistry;
-import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 import net.minecraft.world.World;
 
@@ -30,6 +30,6 @@ public interface IGeneratorOptionManager {
 
     Future<IGeneratorOptionManager> createWorldOptionManager(World world);
 
-    <E> IObjectSerializer<E, IGeneratorOptionProvider> createSerializer(IObjectManipulator<E> manipulator);
+    <E> IObjectSerializer<E, IGeneratorOptionProvider> createSerializer(IObjectType<E> manipulator);
 
 }

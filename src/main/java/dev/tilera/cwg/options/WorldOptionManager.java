@@ -6,7 +6,7 @@ import dev.tilera.cwg.api.options.IGeneratorOptionManager;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.api.options.IOptionBuilder;
-import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 import dev.tilera.cwg.api.serialize.ISerializedRead;
 import dev.tilera.cwg.serialize.GsonManipulator;
@@ -101,7 +101,7 @@ public class WorldOptionManager implements IGeneratorOptionManager {
     }
 
     @Override
-    public <E> IObjectSerializer<E, IGeneratorOptionProvider> createSerializer(IObjectManipulator<E> manipulator) {
+    public <E> IObjectSerializer<E, IGeneratorOptionProvider> createSerializer(IObjectType<E> manipulator) {
         return global.createSerializer(manipulator);
     }
 }

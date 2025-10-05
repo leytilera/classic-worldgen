@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dev.tilera.cwg.api.options.IOption;
-import dev.tilera.cwg.api.serialize.IObjectManipulator;
+import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 import dev.tilera.cwg.serialize.CombinedSerializer;
 import dev.tilera.cwg.serialize.StringSerializer;
@@ -58,7 +58,7 @@ public class WorldTypeOption implements IOption<WorldType> {
     }
 
     @Override
-    public <E> IObjectSerializer<E, WorldType> getSerializer(IObjectManipulator<E> manipulator) {
+    public <E> IObjectSerializer<E, WorldType> getSerializer(IObjectType<E> manipulator) {
         return new CombinedSerializer<>(new StringSerializer<>(manipulator), WorldTypeSerializer.INSTANCE);
     }
     
