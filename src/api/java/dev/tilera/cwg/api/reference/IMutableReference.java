@@ -1,4 +1,4 @@
-package dev.tilera.cwg.options;
+package dev.tilera.cwg.api.reference;
 
 public interface IMutableReference<T> extends IReference<T> {
 

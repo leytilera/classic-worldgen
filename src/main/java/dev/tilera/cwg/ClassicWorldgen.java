@@ -1,12 +1,14 @@
 package dev.tilera.cwg;
 
 
+import java.io.IOException;
 import java.util.Set;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
@@ -66,7 +68,16 @@ public class ClassicWorldgen {
         MinecraftForge.TERRAIN_GEN_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(this);
         initModules();
+    }
 
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        try {
+            CwgGlobals.getOptionManager().load();
+            CwgGlobals.getOptionManager().save();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void initModules() {

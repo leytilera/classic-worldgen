@@ -1,59 +1,86 @@
 package dev.tilera.cwg.options;
 
-import com.google.gson.JsonElement;
 import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.options.IGeneratorOptionManager;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.api.options.IOptionBuilder;
+import dev.tilera.cwg.api.reference.IReference;
 import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 import dev.tilera.cwg.api.serialize.ISerializedRead;
-import dev.tilera.cwg.serialize.GsonManipulator;
-import dev.tilera.cwg.serialize.MapSerializer;
-import dev.tilera.cwg.serialize.NullSerializer;
-import dev.tilera.cwg.serialize.UUIDSerializer;
 import net.minecraft.world.World;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Writer;
 import java.util.*;
-import java.util.concurrent.Future;
+import java.util.function.Predicate;
 
 public class WorldOptionManager implements IGeneratorOptionManager {
 
-    private World world;
     private IGeneratorOptionManager global;
     private File cwgFile;
+    private UUID optionSet;
     private Map<UUID, IGeneratorOptionProvider> optionSets = new HashMap<>();
 
     public WorldOptionManager(World world, IGeneratorOptionManager global) {
-        this.world = world;
         this.global = global;
         File worldDir = world.getSaveHandler().getWorldDirectory();
         cwgFile = new File(worldDir, "cwg.json");
-    }
-
-    public void load() throws IOException {
-        if (cwgFile.exists() && cwgFile.isFile()) {
-            try (Reader file = new FileReader(cwgFile)) {
-                JsonElement content = GlobalOptionManager.JSON_SERIALIZER.deserialize(ISerializedRead.fromReader(file));
-                IObjectSerializer<JsonElement, Map<UUID, JsonElement>> serializer = new MapSerializer<>(
-                        new GsonManipulator(),
-                        UUIDSerializer.INSTANCE,
-                        NullSerializer.instance()
-                );
-                Map<UUID, JsonElement> sets = serializer.deserialize(content);
-            } catch (Exception e) {
-                throw new IOException(e);
-            }
+        try {
+            this.optionSet = UUID.fromString(world.getWorldInfo().getGeneratorOptions());
+        } catch(IllegalArgumentException e) {
+            this.optionSet = DEFAULT;
         }
     }
 
-    public void save() throws IOException {
+    private UUID load(UUID set, Map<UUID, IGeneratorOptionProvider> sets) {
+        IGeneratorOptionProvider options;
+        if (global.getOptionSets().contains(set)) {
+            options = global.getOptions(set).get();
+        } else if (sets.containsKey(set)) {
+            options = sets.get(set);
+        } else {
+            throw new RuntimeException("ALEC: Option Set with ID " + set + " does not exist.");
+        }
+        saveOptions(set, options);
+        return options.getValue("cwg:internal:parent", UUID.class);
+    }
 
+    @Override
+    public void load() throws IOException {
+        Map<UUID, IGeneratorOptionProvider> sets;
+        if (cwgFile.exists() && cwgFile.isFile()) {
+            try {
+                Reader file = new FileReader(cwgFile);
+                IObjectSerializer<ISerializedRead, Map<UUID, IGeneratorOptionProvider>> serializer = OptionFileManager.INSTANCE.createSerializer(this, false);
+                sets = serializer.deserialize(ISerializedRead.fromReader(file));
+            } catch (Exception e) {
+                throw new IOException(e);
+            }
+        } else {
+            sets = new HashMap<>();
+        }
+        UUID current = optionSet;
+        Predicate<UUID> requiresFetch = (UUID id) -> !DEFAULT.equals(id) && !REGISTRY.equals(id) && !CONFIG.equals(id) && !CLASSIC.equals(id);
+        while (requiresFetch.test(current)) {
+            current = load(current, sets);
+        }
+    }
+
+    @Override
+    public void save() throws IOException {
+        IObjectSerializer<ISerializedRead, Map<UUID, IGeneratorOptionProvider>> serializer = OptionFileManager.INSTANCE.createSerializer(this, false);
+        try {
+            Writer writer = new FileWriter(cwgFile);
+            serializer.serialize(optionSets).write(writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -63,7 +90,7 @@ public class WorldOptionManager implements IGeneratorOptionManager {
 
     @Override
     public IHookRegistry getHookRegistry() {
-        return getHookRegistry();
+        return global.getHookRegistry();
     }
 
     @Override
@@ -72,14 +99,11 @@ public class WorldOptionManager implements IGeneratorOptionManager {
     }
 
     @Override
-    public IGeneratorOptionProvider getOptions(UUID optionSet) {
-        IGeneratorOptionProvider options = null;
-        if (global.getOptionSets().contains(optionSet)) {
-            options = global.getOptions(optionSet);
+    public IReference<IGeneratorOptionProvider> getOptions(UUID optionSet) {
+        IReference<IGeneratorOptionProvider> options = null;
+        if (optionSets.containsKey(optionSet)) {
+            options = new Pointer<>(optionSets.get(optionSet));
         } else {
-            options = optionSets.get(optionSet);
-        }
-        if (options == null) {
             options = global.getOptions(optionSet);
         }
         return options;
@@ -88,6 +112,9 @@ public class WorldOptionManager implements IGeneratorOptionManager {
     @Override
     public void saveOptions(UUID optionSet, IGeneratorOptionProvider options) {
         optionSets.put(optionSet, options);
+        if (!global.getOptionSets().contains(optionSet)) {
+            global.saveOptions(optionSet, options);
+        }
     }
 
     @Override
@@ -96,7 +123,7 @@ public class WorldOptionManager implements IGeneratorOptionManager {
     }
 
     @Override
-    public Future<IGeneratorOptionManager> createWorldOptionManager(World world) {
+    public IGeneratorOptionManager createWorldOptionManager(World world) {
         return global.createWorldOptionManager(world);
     }
 

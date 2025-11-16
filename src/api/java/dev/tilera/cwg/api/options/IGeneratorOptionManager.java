@@ -1,13 +1,14 @@
 package dev.tilera.cwg.api.options;
 
 import dev.tilera.cwg.api.hooks.IHookRegistry;
+import dev.tilera.cwg.api.reference.IReference;
 import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 import net.minecraft.world.World;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.UUID;
-import java.util.concurrent.Future;
 
 public interface IGeneratorOptionManager {
 
@@ -22,14 +23,18 @@ public interface IGeneratorOptionManager {
 
     <T> IOptionBuilder<T> builder(Class<T> clazz);
 
-    IGeneratorOptionProvider getOptions(UUID optionSet);
+    IReference<IGeneratorOptionProvider> getOptions(UUID optionSet);
 
     void saveOptions(UUID optionSet, IGeneratorOptionProvider options);
 
     Collection<UUID> getOptionSets();
 
-    Future<IGeneratorOptionManager> createWorldOptionManager(World world);
+    IGeneratorOptionManager createWorldOptionManager(World world);
 
     <E> IObjectSerializer<E, IGeneratorOptionProvider> createSerializer(IObjectType<E> manipulator);
+
+    void load() throws IOException;
+
+    void save() throws IOException;
 
 }

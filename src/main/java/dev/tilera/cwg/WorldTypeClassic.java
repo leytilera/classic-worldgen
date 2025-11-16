@@ -76,6 +76,8 @@ public class WorldTypeClassic extends WorldType implements IGeneratorOptionProvi
             return (T) getDouble(id);
         } else if (id.equals("cwg:cavegen_hook")) {
             return (T) CwgGlobals.getHookRegistry().getHookProvider("cwg:swiss_cavegen");
+        } else if (id.equals("cwg:generator")) {
+            return (T) CwgGlobals.getHookRegistry().getHookProvider("cwg:classic");
         }
         return ClassicWorldgen.CONFIG.getValue(id, type);
     }
@@ -83,6 +85,7 @@ public class WorldTypeClassic extends WorldType implements IGeneratorOptionProvi
     @Override
     public Collection<String> getOptions() {
         return Arrays.asList(
+            "cwg:generator",
                 "cwg:cavegen_hook",
                 "cwg:classic_extreme_hills",
                 "cwg:disable_jungle_melons",

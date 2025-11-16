@@ -1,6 +1,7 @@
 package dev.tilera.cwg.serialize;
 
 import java.io.IOException;
+import java.io.Reader;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,6 +16,7 @@ public class GsonSerializer implements IObjectSerializer<ISerializedRead, JsonEl
 
     public static IObjectSerializer<ISerializedRead, JsonElement> RW = new GsonSerializer();
     public static IObjectSerializer<String, JsonElement> STRING = new CombinedSerializer<>(StringReadSerializer.INSTANCE, RW);
+    public static IObjectSerializer<ISerializedRead, JsonElement> PRETTY = new GsonSerializer(new GsonBuilder().setPrettyPrinting().create());
 
     private Gson gson;
 
@@ -32,13 +34,17 @@ public class GsonSerializer implements IObjectSerializer<ISerializedRead, JsonEl
     public ISerializedRead serialize(JsonElement object) {
         return (writer) -> {
             gson.toJson(object, writer);
+            writer.close();
         };
     }
 
     @Override
     public JsonElement deserialize(ISerializedRead encoded) throws IllegalArgumentException {
         try {
-            return gson.fromJson(encoded.read(), JsonElement.class);
+            Reader reader = encoded.read();
+            JsonElement result = gson.fromJson(reader, JsonElement.class);
+            reader.close();
+            return result;
         } catch (JsonSyntaxException | JsonIOException | IOException e) {
             throw new IllegalArgumentException(e);
         }

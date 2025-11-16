@@ -17,7 +17,7 @@ public class CwgGlobals {
     }
 
     public static IGeneratorOptionProvider getOptionProvider(World world) {
-        if (!isCwgWorld(world)) return manager.getOptions(IGeneratorOptionManager.CONFIG);
+        if (!isCwgWorld(world)) return manager.getOptions(IGeneratorOptionManager.CONFIG).get();
         AbstractChunkManager chunkManager = (AbstractChunkManager) world.provider.worldChunkMgr;
         return chunkManager.getOptionProvider();
     }

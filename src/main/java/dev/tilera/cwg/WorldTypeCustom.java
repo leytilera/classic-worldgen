@@ -1,15 +1,14 @@
 package dev.tilera.cwg;
 
+import java.io.IOException;
+import java.util.UUID;
+
 import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.generator.AbstractChunkManager;
 import dev.tilera.cwg.api.hooks.IHookProvider;
 import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.api.options.IGeneratorOptionManager;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
-import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
-import dev.tilera.cwg.gui.GuiCustomize;
-import dev.tilera.cwg.options.OptionProvider;
-import dev.tilera.cwg.options.Pointer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiCreateWorld;
 import net.minecraft.world.World;
@@ -25,21 +24,27 @@ public class WorldTypeCustom extends WorldType {
 
     @Override
     public WorldChunkManager getChunkManager(World world) {
-        IGeneratorOptionRegistry registry = CwgGlobals.getOptionRegistry();
-        String opts = world.getWorldInfo().getGeneratorOptions();
-        IGeneratorOptionProvider options;
-        if (opts.isEmpty()) {
-            options = registry;
-        } else {
-            try {
-                options = registry.decodeOptions(opts);
-            } catch (Exception e) {
-                e.printStackTrace();
-                options = registry;
-            }
+        IGeneratorOptionManager optManager = CwgGlobals.getOptionManager().createWorldOptionManager(world);
+        try {
+            optManager.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+        String opts = world.getWorldInfo().getGeneratorOptions();
+        UUID optId = null;
+        try {
+            optId = UUID.fromString(opts);
+        } catch (IllegalArgumentException e) {
+            optId = IGeneratorOptionManager.DEFAULT;
+        }
+        IGeneratorOptionProvider options = optManager.getOptions(optId).get();
         AbstractChunkManager manager = options.getValue("cwg:generator", IHookProvider.class).getHook(HookTypes.GENERATOR).createChunkManager(options, world);
         CwgGlobals.setCurrentState(world);
+        try {
+            optManager.save();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return manager;
     }
 
@@ -60,7 +65,7 @@ public class WorldTypeCustom extends WorldType {
     @Override
     public void onCustomizeButton(Minecraft instance, GuiCreateWorld guiCreateWorld) {
         IGeneratorOptionManager manager = CwgGlobals.getOptionManager();
-        instance.displayGuiScreen(new GuiCustomize(manager, guiCreateWorld, new OptionProvider(new Pointer<>(manager.getOptionRegistry()))));
+        //instance.displayGuiScreen(new GuiCustomize(manager, guiCreateWorld, new OptionProvider(new Pointer<>(manager.getOptionRegistry()))));
     }
 
 }

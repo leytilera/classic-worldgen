@@ -1,9 +1,10 @@
 package dev.tilera.cwg.options;
 
+import dev.tilera.cwg.api.reference.IMutableReference;
+
 public class Pointer<T> implements IMutableReference<T> {
 
     private T value;
-
     public Pointer() {
         value = null;
     }

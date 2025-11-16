@@ -1,10 +1,9 @@
-package dev.tilera.cwg.options;
+package dev.tilera.cwg.api.reference;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
-public interface IReference<T> {
-
-    T get();
+public interface IReference<T> extends Supplier<T> {
 
     default boolean isNull() {
         return get() == null;

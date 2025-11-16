@@ -1,12 +1,11 @@
 package dev.tilera.cwg.options;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
-import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
+import dev.tilera.cwg.api.reference.IReference;
 
 public class OptionProvider implements IGeneratorOptionProvider {
 

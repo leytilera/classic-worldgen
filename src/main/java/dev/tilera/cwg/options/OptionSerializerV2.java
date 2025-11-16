@@ -71,7 +71,7 @@ public class OptionSerializerV2<T> implements IObjectSerializer<T, IGeneratorOpt
         if (options.containsKey(ParentOption.INSTANCE.getID())) {
             parent = (UUID) options.get(ParentOption.INSTANCE.getID());
         }
-        OptionProvider provider = new OptionProvider(manager.getReference(parent));
+        OptionProvider provider = new OptionProvider(manager.getOptions(parent));
         options.forEach(provider::putValue);
         return provider;
     }
