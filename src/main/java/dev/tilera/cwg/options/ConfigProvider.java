@@ -6,6 +6,7 @@ import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 
 public class ConfigProvider implements IGeneratorOptionProvider {
 
@@ -57,6 +58,8 @@ public class ConfigProvider implements IGeneratorOptionProvider {
             return (T) getDouble(id);
         } else if (id.equals("cwg:cavegen_hook") && Config.enableSwissCheeseCaves) {
             return (T) CwgGlobals.getHookRegistry().getHookProvider("cwg:swiss_cavegen");
+        } else if (id.equals("cwg:internal:name")) {
+            return (T) Optional.of("Config");
         }
         return parent.getValue(id, type);
     }
@@ -71,7 +74,8 @@ public class ConfigProvider implements IGeneratorOptionProvider {
                 "cwg:generator.classic:disableJungle",
                 "cwg:generator.classic:newVanillaBiomes",
                 "cwg:generator.classic:disableModdedBiomes",
-                "cwg:generator.classic:enableModdedWorldgen"
+                "cwg:generator.classic:enableModdedWorldgen",
+                "cwg:internal:name"
         );
     }
 

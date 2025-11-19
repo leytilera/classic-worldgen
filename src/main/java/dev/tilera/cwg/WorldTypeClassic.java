@@ -78,6 +78,8 @@ public class WorldTypeClassic extends WorldType implements IGeneratorOptionProvi
             return (T) CwgGlobals.getHookRegistry().getHookProvider("cwg:swiss_cavegen");
         } else if (id.equals("cwg:generator")) {
             return (T) CwgGlobals.getHookRegistry().getHookProvider("cwg:classic");
+        } else if (id.equals("cwg:internal:name")) {
+            return (T) Optional.of("Classic (1.6)");
         }
         return ClassicWorldgen.CONFIG.getValue(id, type);
     }
@@ -90,7 +92,8 @@ public class WorldTypeClassic extends WorldType implements IGeneratorOptionProvi
                 "cwg:classic_extreme_hills",
                 "cwg:disable_jungle_melons",
                 "cwg:disable_new_flowers",
-                "cwg:disable_tall_flowers"
+                "cwg:disable_tall_flowers",
+                "cwg:internal:name"
         );
     }
 
@@ -98,5 +101,5 @@ public class WorldTypeClassic extends WorldType implements IGeneratorOptionProvi
     public IGeneratorOptionProvider copy() {
         return this;
     }
-    
+
 }
