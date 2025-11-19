@@ -94,4 +94,9 @@ public class WorldTypeClassic extends WorldType implements IGeneratorOptionProvi
         );
     }
 
+    @Override
+    public IGeneratorOptionProvider copy() {
+        return this;
+    }
+    
 }

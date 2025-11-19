@@ -35,7 +35,10 @@ public class WorldTypeCustom extends WorldType {
         try {
             optId = UUID.fromString(opts);
         } catch (IllegalArgumentException e) {
-            optId = IGeneratorOptionManager.DEFAULT;
+            optId = UUID.randomUUID();
+            IGeneratorOptionProvider copy = optManager.getOptions(IGeneratorOptionManager.DEFAULT).get().copy();
+            optManager.saveOptions(optId, copy);
+            world.getWorldInfo().generatorOptions = optId.toString();
         }
         IGeneratorOptionProvider options = optManager.getOptions(optId).get();
         AbstractChunkManager manager = options.getValue("cwg:generator", IHookProvider.class).getHook(HookTypes.GENERATOR).createChunkManager(options, world);

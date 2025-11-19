@@ -1,7 +1,5 @@
 package dev.tilera.cwg.api.options;
 
-import dev.tilera.cwg.api.CwgGlobals;
-
 import java.util.Collection;
 
 public interface IGeneratorOptionProvider {
@@ -17,5 +15,7 @@ public interface IGeneratorOptionProvider {
     <T> T getValue(String id, Class<T> type);
 
     Collection<String> getOptions();
+
+    IGeneratorOptionProvider copy();
 
 }

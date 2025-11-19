@@ -78,5 +78,12 @@ public class OptionProvider implements IGeneratorOptionProvider {
     public void putValue(String id, Object value) {
         storage.put(id, value);
     }
+
+    @Override
+    public IGeneratorOptionProvider copy() {
+        OptionProvider copy = new OptionProvider(parent);
+        storage.forEach(copy::putValue);
+        return copy;
+    }
     
 }

@@ -3,11 +3,9 @@ package dev.tilera.cwg.options;
 import dev.tilera.cwg.Config;
 import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
-import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 public class ConfigProvider implements IGeneratorOptionProvider {
 
@@ -75,6 +73,11 @@ public class ConfigProvider implements IGeneratorOptionProvider {
                 "cwg:generator.classic:disableModdedBiomes",
                 "cwg:generator.classic:enableModdedWorldgen"
         );
+    }
+
+    @Override
+    public IGeneratorOptionProvider copy() {
+        return this;
     }
     
 }

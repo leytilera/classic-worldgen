@@ -109,4 +109,9 @@ public class OptionRegistry implements IGeneratorOptionRegistry {
         }
     }
 
+    @Override
+    public IGeneratorOptionProvider copy() {
+        return this;
+    }
+
 }

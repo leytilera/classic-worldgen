@@ -47,5 +47,10 @@ public class DefaultOptionProvider implements IGeneratorOptionProvider {
     public Collection<String> getOptions() {
         return Collections.singleton("cwg:internal:parent");
     }
+
+    @Override
+    public IGeneratorOptionProvider copy() {
+        return this;
+    }
     
 }
