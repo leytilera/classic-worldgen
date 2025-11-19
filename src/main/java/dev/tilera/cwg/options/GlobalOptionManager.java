@@ -40,6 +40,8 @@ public class GlobalOptionManager implements IGeneratorOptionManager {
     private Map<UUID, String> optionSetFiles = new HashMap<>();
     private Map<UUID, IMutableReference<IGeneratorOptionProvider>> missing = new HashMap<>();
     private File cwgDir;
+    private IMutableReference<IGeneratorOptionProvider> lastAddedRef = new Pointer<>();
+    private static UUID lastAddedId = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
     public GlobalOptionManager(IGeneratorOptionRegistry optionRegistry, IHookRegistry hookRegistry) {
         this.optionRegistry = optionRegistry;
@@ -81,6 +83,7 @@ public class GlobalOptionManager implements IGeneratorOptionManager {
             IMutableReference<IGeneratorOptionProvider> ref = missing.remove(optionSet);
             ref.set(options);
         }
+        lastAddedRef.set(options);
     }
 
     @Override
@@ -100,7 +103,9 @@ public class GlobalOptionManager implements IGeneratorOptionManager {
 
     @Override
     public IReference<IGeneratorOptionProvider> getOptions(UUID id) {
-        if (optionSets.containsKey(id)) {
+        if (lastAddedId.equals(id)) {
+            return lastAddedRef;
+        } else if (optionSets.containsKey(id)) {
             return new Pointer<>(optionSets.get(id));
         } else if (missing.containsKey(id)) {
             return missing.get(id);
