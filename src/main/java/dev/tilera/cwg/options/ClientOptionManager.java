@@ -44,7 +44,7 @@ public class ClientOptionManager implements IGeneratorOptionManager {
 
     @Override
     public void saveOptions(UUID optionSet, IGeneratorOptionProvider options) {
-        inner.saveOptions(optionSet, options);
+        
     }
 
     @Override

@@ -124,7 +124,6 @@ public class GlobalOptionManager implements IGeneratorOptionManager {
         File[] files = cwgDir.listFiles((file) -> 
             !file.isDirectory()
             && file.getName().endsWith(".json") 
-            && !file.getName().equals("dimensions.json")
             && !file.getName().equals("builtin.json")
         );
         for (File file : files) {
