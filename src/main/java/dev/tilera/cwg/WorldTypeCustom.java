@@ -20,6 +20,14 @@ public class WorldTypeCustom extends WorldType {
 
     public WorldTypeCustom() {
         super("cwg");
+        WorldType original = WorldType.worldTypes[0];
+        WorldType.worldTypes[0] = this;
+        for (int i = 1; i < WorldType.worldTypes.length; i++) {
+            if (WorldType.worldTypes[i] == this) {
+                WorldType.worldTypes[i] = original;
+                break;
+            }
+        }
     }
 
     @Override
