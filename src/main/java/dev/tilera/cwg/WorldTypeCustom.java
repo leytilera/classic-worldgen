@@ -32,6 +32,7 @@ public class WorldTypeCustom extends WorldType {
 
     @Override
     public WorldChunkManager getChunkManager(World world) {
+        if (world.isRemote) return new ChunkManagerClient();
         IGeneratorOptionManager optManager = CwgGlobals.getOptionManager().createWorldOptionManager(world);
         try {
             optManager.load();
