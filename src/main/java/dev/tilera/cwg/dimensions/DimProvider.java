@@ -26,7 +26,7 @@ public class DimProvider extends WorldProvider {
 
     @Override
     protected void registerWorldChunkManager() {
-        IGeneratorOptionProvider options = CustomDimensions.INSTANCE.getDimensionOptions(dimensionId);
+        IGeneratorOptionProvider options = CustomDimensions.instance().getDimensionOptions(dimensionId);
         this.worldChunkMgr = options.getValue("cwg:generator", IHookProvider.class).getHook(HookTypes.GENERATOR).createChunkManager(options, worldObj);
     }
 

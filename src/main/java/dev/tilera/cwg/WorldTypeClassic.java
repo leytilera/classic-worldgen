@@ -23,7 +23,6 @@ public class WorldTypeClassic extends WorldType implements IGeneratorOptionProvi
     @Override
     public WorldChunkManager getChunkManager(World world) {
         WorldChunkManagerClassic manager = factory.createChunkManager(this, world);
-        CwgGlobals.setCurrentState(world);
         return manager;
     }
 

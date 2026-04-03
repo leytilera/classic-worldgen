@@ -2,11 +2,11 @@ package dev.tilera.cwg.classic;
 
 import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
-import dev.tilera.cwg.modules.Module;
 import dev.tilera.cwg.options.common.BooleanOption;
+import net.anvilcraft.anvillib.api.inject.Implementation;
 import dev.tilera.cwg.modules.IModule;
 
-@Module
+@Implementation(IModule.class)
 public class ClassicModule implements IModule {
 
     @Override

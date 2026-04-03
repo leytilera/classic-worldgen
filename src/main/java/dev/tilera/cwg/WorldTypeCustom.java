@@ -51,7 +51,6 @@ public class WorldTypeCustom extends WorldType {
         }
         IGeneratorOptionProvider options = optManager.getOptions(optId).get();
         AbstractChunkManager manager = options.getValue("cwg:generator", IHookProvider.class).getHook(HookTypes.GENERATOR).createChunkManager(options, world);
-        CwgGlobals.setCurrentState(world);
         try {
             optManager.save();
         } catch (IOException e) {

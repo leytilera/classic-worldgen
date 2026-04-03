@@ -3,9 +3,9 @@ package dev.tilera.cwg.infdev;
 import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.modules.IModule;
-import dev.tilera.cwg.modules.Module;
+import net.anvilcraft.anvillib.api.inject.Implementation;
 
-@Module
+@Implementation(IModule.class)
 public class InfdevModule implements IModule {
 
     @Override

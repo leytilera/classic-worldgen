@@ -85,6 +85,7 @@ sourceSets {
 
 
 dependencies {
+    implementation "net.anvilcraft:anvillib-7:0.4.0:deobf"
     implementation "com.github.tox1cozZ:mixin-booter-legacy:1.1.2"
     annotationProcessor "com.github.tox1cozZ:mixin-booter-legacy:1.1.2:processor"
 }

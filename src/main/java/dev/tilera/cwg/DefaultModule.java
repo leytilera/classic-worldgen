@@ -3,7 +3,6 @@ package dev.tilera.cwg;
 import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
-import dev.tilera.cwg.modules.Module;
 import dev.tilera.cwg.options.common.BooleanOption;
 import dev.tilera.cwg.options.common.IntOption;
 import dev.tilera.cwg.modules.IModule;
@@ -12,8 +11,9 @@ import dev.tilera.cwg.options.OptionSetNameOption;
 import dev.tilera.cwg.options.ParentOption;
 import dev.tilera.cwg.vanilla.SingleBiomeChunkManagerFactory;
 import dev.tilera.cwg.vanilla.VanillaChunkManagerFactory;
+import net.anvilcraft.anvillib.api.inject.Implementation;
 
-@Module
+@Implementation(IModule.class)
 public class DefaultModule implements IModule {
 
     @Override

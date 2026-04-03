@@ -4,9 +4,9 @@ import dev.tilera.cwg.api.hooks.IHookType;
 import dev.tilera.cwg.api.options.IGeneratorOptionManager;
 import dev.tilera.cwg.hooks.HookOption;
 import dev.tilera.cwg.modules.IModule;
-import dev.tilera.cwg.modules.Module;
+import net.anvilcraft.anvillib.api.inject.Implementation;
 
-@Module
+@Implementation(IModule.class)
 public class BetaModule implements IModule {
 
     public static IHookType<IBetaBiomeProvider> BIOMES;

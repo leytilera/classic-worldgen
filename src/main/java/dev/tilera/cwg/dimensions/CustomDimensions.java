@@ -10,17 +10,23 @@ import dev.tilera.cwg.api.options.IGeneratorOptionManager;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.api.reference.IMutableReference;
-import dev.tilera.cwg.modules.Module;
 import dev.tilera.cwg.options.common.IntOption;
 import dev.tilera.cwg.options.common.StringOption;
 import dev.tilera.cwg.modules.IModule;
+import net.anvilcraft.anvillib.api.inject.Implementation;
+import net.anvilcraft.anvillib.api.inject.Inject;
 import net.minecraftforge.common.DimensionManager;
 
-@Module
+@Implementation(value = IModule.class, id = "dimensions")
 public class CustomDimensions implements IModule {
 
-    public static CustomDimensions INSTANCE;
+    @Inject(value = IModule.class, preferred = "dimensions")
+    private static IModule INSTANCE;
     private Map<Integer, IGeneratorOptionProvider> dimensions = new HashMap<>();
+    
+    public static CustomDimensions instance() {
+        return (CustomDimensions) INSTANCE;
+    }
 
     public IGeneratorOptionProvider getDimensionOptions(int id) {
         return dimensions.get(id);
@@ -47,7 +53,6 @@ public class CustomDimensions implements IModule {
 
     @Override
     public void init(IGeneratorOptionManager manager) {
-        INSTANCE = this;
         IGeneratorOptionRegistry registry = manager.getOptionRegistry();
         registry.registerOption(new DimensionOption());
         registry.registerOption(new StringOption("cwg:dimensions:name", "Dimension Name", "Custom Dimension", true, false));
