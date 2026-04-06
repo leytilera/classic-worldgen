@@ -26,5 +26,10 @@ public class StringReadSerializer implements IObjectSerializer<String, ISerializ
     public ISerializedRead deserialize(String encoded) throws IllegalArgumentException {
         return ISerializedRead.fromReader(new StringReader(encoded));
     }
+
+    @Override
+    public boolean canDeserialize(String encoded) {
+        return true;
+    }
     
 }

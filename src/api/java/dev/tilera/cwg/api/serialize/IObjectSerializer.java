@@ -6,4 +6,6 @@ public interface IObjectSerializer<E, D> {
 
     D deserialize(E encoded) throws IllegalArgumentException;
 
+    boolean canDeserialize(E encoded);
+
 }

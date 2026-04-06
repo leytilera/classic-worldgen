@@ -32,5 +32,10 @@ public class OptionalSerializer<T, S> implements IObjectSerializer<T, Optional<S
             return Optional.of(subSerializer.deserialize(encoded));
         }
     }
+
+    @Override
+    public boolean canDeserialize(T encoded) {
+        return subSerializer.canDeserialize(encoded);
+    }
     
 }

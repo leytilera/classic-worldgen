@@ -18,5 +18,10 @@ public class WorldTypeSerializer implements IObjectSerializer<String, WorldType>
         if (wt == null) throw new IllegalArgumentException("Invalid world type: " + encoded);
         return wt;
     }
+
+    @Override
+    public boolean canDeserialize(String encoded) {
+        return true;
+    }
     
 }

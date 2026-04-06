@@ -20,5 +20,10 @@ public class NullSerializer<T> implements IObjectSerializer<T, T> {
     public T deserialize(T encoded) throws IllegalArgumentException {
         return encoded;
     }
+
+    @Override
+    public boolean canDeserialize(T encoded) {
+        return true;
+    }
     
 }

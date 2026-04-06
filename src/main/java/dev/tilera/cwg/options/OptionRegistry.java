@@ -14,15 +14,16 @@ import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 import dev.tilera.cwg.serialize.Base64Encoder;
 import dev.tilera.cwg.serialize.CombinedSerializer;
-import dev.tilera.cwg.serialize.GsonManipulator;
 import dev.tilera.cwg.serialize.GsonSerializer;
+import net.anvilcraft.anvillib.api.inject.Inject;
 
 public class OptionRegistry implements IGeneratorOptionRegistry {
     
     private Map<String, IOption<?>> registry = new HashMap<>();
     private IObjectSerializer<String, JsonElement> gsonSerializer = GsonSerializer.STRING;
     private IObjectSerializer<String, JsonElement> base64JsonSerializer = new CombinedSerializer<>(Base64Encoder.INSTANCE, gsonSerializer);
-    private IObjectType<JsonElement> manipulator = new GsonManipulator();
+    @Inject(IObjectType.class)
+    private static IObjectType<JsonElement> manipulator;
     private IObjectSerializer<JsonElement, IGeneratorOptionProvider> optionSerializer = new OptionSerializer<JsonElement>(manipulator, this, this);
     private IObjectSerializer<String, IGeneratorOptionProvider> base64OptionSerializer = new CombinedSerializer<>(base64JsonSerializer, optionSerializer);
 

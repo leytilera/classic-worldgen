@@ -49,5 +49,10 @@ public class GsonSerializer implements IObjectSerializer<ISerializedRead, JsonEl
             throw new IllegalArgumentException(e);
         }
     }
+
+    @Override
+    public boolean canDeserialize(ISerializedRead encoded) {
+        return true;
+    }
     
 }

@@ -21,5 +21,10 @@ public class CombinedSerializer<E, I, D> implements IObjectSerializer<E, D> {
     public D deserialize(E encoded) throws IllegalArgumentException {
         return frontend.deserialize(backend.deserialize(encoded));
     }
+
+    @Override
+    public boolean canDeserialize(E encoded) {
+        return backend.canDeserialize(encoded);
+    }
     
 }

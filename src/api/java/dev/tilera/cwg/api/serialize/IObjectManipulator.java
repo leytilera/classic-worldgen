@@ -12,4 +12,6 @@ public interface IObjectManipulator<T, I> {
 
     T create();
 
+    boolean isInstance(T object);
+
 }

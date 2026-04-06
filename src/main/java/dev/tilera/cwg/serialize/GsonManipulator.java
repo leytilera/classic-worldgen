@@ -11,9 +11,14 @@ import com.google.gson.JsonPrimitive;
 import dev.tilera.cwg.api.serialize.IObjectManipulator;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
 import dev.tilera.cwg.api.serialize.IObjectType;
-import dev.tilera.cwg.api.serialize.RepresentationType;
+import net.anvilcraft.anvillib.api.inject.Implementation;
 
+@Implementation(value = IObjectType.class, id = "gson")
 public class GsonManipulator implements IObjectType<JsonElement> {
+
+    private GsonManipulator() {
+        
+    }
 
     private final IObjectSerializer<JsonElement, String> stringSerializer = new IObjectSerializer<JsonElement, String>() {
 
@@ -29,6 +34,11 @@ public class GsonManipulator implements IObjectType<JsonElement> {
             } catch(Exception e) {
                 throw new IllegalArgumentException(e);
             }
+        }
+
+        @Override
+        public boolean canDeserialize(JsonElement encoded) {
+            return encoded != null && encoded.isJsonPrimitive() && encoded.getAsJsonPrimitive().isString();
         }
         
     };
@@ -47,6 +57,11 @@ public class GsonManipulator implements IObjectType<JsonElement> {
                 throw new IllegalArgumentException(e);
             }
         }
+
+        @Override
+        public boolean canDeserialize(JsonElement encoded) {
+            return encoded != null && encoded.isJsonPrimitive() && encoded.getAsJsonPrimitive().isBoolean();
+        }
         
     };
     private final IObjectSerializer<JsonElement, Long> integerSerializer = new IObjectSerializer<JsonElement, Long>() {
@@ -64,6 +79,11 @@ public class GsonManipulator implements IObjectType<JsonElement> {
                 throw new IllegalArgumentException(e);
             }
         }
+
+        @Override
+        public boolean canDeserialize(JsonElement encoded) {
+            return encoded != null && encoded.isJsonPrimitive() && encoded.getAsJsonPrimitive().isNumber();
+        }
         
     };
     private final IObjectSerializer<JsonElement, Double> floatSerializer = new IObjectSerializer<JsonElement, Double>() {
@@ -80,6 +100,11 @@ public class GsonManipulator implements IObjectType<JsonElement> {
             } catch(Exception e) {
                 throw new IllegalArgumentException(e);
             }
+        }
+
+        @Override
+        public boolean canDeserialize(JsonElement encoded) {
+            return encoded != null && encoded.isJsonPrimitive() && encoded.getAsJsonPrimitive().isNumber();
         }
         
     };
@@ -123,6 +148,11 @@ public class GsonManipulator implements IObjectType<JsonElement> {
         @Override
         public JsonElement create() {
             return new JsonArray();
+        }
+
+        @Override
+        public boolean isInstance(JsonElement object) {
+            return object != null && object.isJsonArray();
         }
         
     };
@@ -169,6 +199,11 @@ public class GsonManipulator implements IObjectType<JsonElement> {
         public JsonElement create() {
             return new JsonObject();
         }
+
+        @Override
+        public boolean isInstance(JsonElement object) {
+            return object != null && object.isJsonObject();
+        }
         
     };
 
@@ -180,26 +215,6 @@ public class GsonManipulator implements IObjectType<JsonElement> {
     @Override
     public boolean isNull(JsonElement object) {
         return object == null || object.isJsonNull();
-    }
-
-    @Override
-    public boolean isOfType(JsonElement object, RepresentationType type) {
-        switch(type) {
-            case ARRAY:
-                return object.isJsonArray();
-            case BOOLEAN:
-                return object.isJsonPrimitive() && object.getAsJsonPrimitive().isBoolean();
-            case FLOAT:
-            case INTEGER:
-                return object.isJsonPrimitive() && object.getAsJsonPrimitive().isNumber();
-            case OBJECT:
-                return object.isJsonObject();
-            case STRING:
-            return object.isJsonPrimitive() && object.getAsJsonPrimitive().isString();
-            default:
-                return false;
-            
-        }
     }
 
     @Override

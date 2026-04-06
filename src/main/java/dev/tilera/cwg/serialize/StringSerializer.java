@@ -2,7 +2,6 @@ package dev.tilera.cwg.serialize;
 
 import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
-import dev.tilera.cwg.api.serialize.RepresentationType;
 
 public class StringSerializer<T> implements IObjectSerializer<T, String> {
 
@@ -19,8 +18,13 @@ public class StringSerializer<T> implements IObjectSerializer<T, String> {
 
     @Override
     public String deserialize(T encoded) throws IllegalArgumentException {
-        if (!manipulator.isOfType(encoded, RepresentationType.STRING)) throw new IllegalArgumentException("Encoded object must be a string");
+        if (!this.canDeserialize(encoded)) throw new IllegalArgumentException("Encoded object must be a string");
         return manipulator.strings().deserialize(encoded);
+    }
+
+    @Override
+    public boolean canDeserialize(T encoded) {
+        return manipulator.strings().canDeserialize(encoded);
     }
     
 }

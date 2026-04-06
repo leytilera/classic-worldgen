@@ -69,5 +69,10 @@ public class OptionSerializer<T> implements IObjectSerializer<T, IGeneratorOptio
         }
         return provider;
     }
+
+    @Override
+    public boolean canDeserialize(T encoded) {
+        return true;
+    }
     
 }

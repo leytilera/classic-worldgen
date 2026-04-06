@@ -4,7 +4,6 @@ import dev.tilera.cwg.api.hooks.IHookProvider;
 import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.serialize.IObjectType;
 import dev.tilera.cwg.api.serialize.IObjectSerializer;
-import dev.tilera.cwg.api.serialize.RepresentationType;
 
 public class HookIdSerializer<T> implements IObjectSerializer<T, IHookProvider> {
 
@@ -23,11 +22,16 @@ public class HookIdSerializer<T> implements IObjectSerializer<T, IHookProvider> 
 
     @Override
     public IHookProvider deserialize(T encoded) throws IllegalArgumentException {
-        if (!manipulator.isOfType(encoded, RepresentationType.STRING)) throw new IllegalArgumentException("Object must be a string");
+        if (!this.canDeserialize(encoded)) throw new IllegalArgumentException("Object must be a string");
         String id = manipulator.strings().deserialize(encoded);
         IHookProvider provider = registry.getHookProvider(id);
         if (provider == null) throw new IllegalArgumentException("No HookProvider with ID " + id);
         return provider;
+    }
+
+    @Override
+    public boolean canDeserialize(T encoded) {
+        return manipulator.strings().canDeserialize(encoded);
     }
     
 }

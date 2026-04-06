@@ -18,6 +18,4 @@ public interface IObjectType<T> {
 
     boolean isNull(T object);
 
-    boolean isOfType(T object, RepresentationType type);
-
 }

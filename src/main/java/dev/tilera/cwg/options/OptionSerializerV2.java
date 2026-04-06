@@ -75,4 +75,9 @@ public class OptionSerializerV2<T> implements IObjectSerializer<T, IGeneratorOpt
         options.forEach(provider::putValue);
         return provider;
     }
+
+    @Override
+    public boolean canDeserialize(T encoded) {
+        return true;
+    }
 }

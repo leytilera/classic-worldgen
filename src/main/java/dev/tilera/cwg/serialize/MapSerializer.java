@@ -38,5 +38,10 @@ public class MapSerializer<T, K, V> implements IObjectSerializer<T, Map<K, V>> {
         }
         return map;
     }
+
+    @Override
+    public boolean canDeserialize(T encoded) {
+        return true;
+    }
     
 }
