@@ -3,6 +3,7 @@ package dev.tilera.cwg.hooks;
 import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.hooks.IHookType;
 import dev.tilera.cwg.api.hooks.IHookTypeManager;
+import net.anvilcraft.anvillib.api.inject.Implementation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,11 +11,16 @@ import java.util.stream.Stream;
 
 import dev.tilera.cwg.api.hooks.IHookProvider;
 
+@Implementation({IHookRegistry.class, IHookTypeManager.class})
 public class HookRegistry implements IHookRegistry, IHookTypeManager {
 
     private Map<String, IHookProvider> registry = new HashMap<>();
     private Map<Class<?>, IHookType<?>> hookTypes = new HashMap<>();
     private Map<IHookType<?>, Map<String, IHookProvider>> typedRegistry = new HashMap<>();
+
+    private HookRegistry() {
+        
+    }
 
     @Override
     public void registerHookProvider(IHookProvider hookProvider) {

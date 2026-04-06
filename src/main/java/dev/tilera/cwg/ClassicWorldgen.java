@@ -14,18 +14,17 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.hooks.IHookProvider;
+import dev.tilera.cwg.api.hooks.IHookRegistry;
 import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.api.options.IGeneratorOptionManager;
 import dev.tilera.cwg.api.options.IGeneratorOptionRegistry;
 import dev.tilera.cwg.biome.Biomes;
 import dev.tilera.cwg.command.CommandChangeWorld;
-import dev.tilera.cwg.hooks.HookRegistry;
 import dev.tilera.cwg.api.hooks.common.ICavegenHook;
 import dev.tilera.cwg.modules.IModule;
 import dev.tilera.cwg.noisegen.NoiseGeneratorOctavesFarlands;
 import dev.tilera.cwg.options.ConfigProvider;
 import dev.tilera.cwg.options.GlobalOptionManager;
-import dev.tilera.cwg.options.OptionRegistry;
 import dev.tilera.cwg.proxy.CommonProxy;
 import net.anvilcraft.anvillib.api.inject.IInjectionHandler;
 import net.anvilcraft.anvillib.api.inject.Inject;
@@ -53,14 +52,17 @@ public class ClassicWorldgen {
     Collection<IModule> modules;
     @Inject(IInjectionHandler.class)
     IInjectionHandler inject;
+    @Inject(IGeneratorOptionRegistry.class)
+    IGeneratorOptionRegistry optionRegistry;
+    @Inject(IHookRegistry.class)
+    IHookRegistry hookRegistry;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         Config.initConfig();
-        IGeneratorOptionRegistry optionRegistry = new OptionRegistry();
         CONFIG = new ConfigProvider(optionRegistry);
-        inject.inject(new GlobalOptionManager(optionRegistry, new HookRegistry()), IGeneratorOptionManager.class);
-        HookTypes.init(CwgGlobals.getHookRegistry());
+        inject.inject(new GlobalOptionManager(optionRegistry, hookRegistry), IGeneratorOptionManager.class);
+        HookTypes.init(hookRegistry);
     }
 
     @EventHandler
