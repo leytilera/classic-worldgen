@@ -77,7 +77,7 @@ public class GlobalOptionManager implements IGeneratorOptionManager {
     public void saveOptions(UUID optionSet, IGeneratorOptionProvider options) {
         optionSets.put(optionSet, options);
         if (!optionSetFiles.containsKey(optionSet)) {
-            optionSetFiles.put(optionSet, "generated");
+            optionSetFiles.put(optionSet, null);
         }
         if (missing.containsKey(optionSet)) {
             IMutableReference<IGeneratorOptionProvider> ref = missing.remove(optionSet);
@@ -149,6 +149,7 @@ public class GlobalOptionManager implements IGeneratorOptionManager {
             }
             files.get(v).put(k, options);
         });
+        files.remove(null);
         files.forEach((k, v) -> {
             File file = new File(cwgDir, k + ".json");
             try {
