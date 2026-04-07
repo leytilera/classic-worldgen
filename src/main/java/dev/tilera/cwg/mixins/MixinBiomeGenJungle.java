@@ -5,7 +5,7 @@ import java.util.Random;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-import dev.tilera.cwg.api.CwgGlobals;
+import dev.tilera.cwg.context.GeneratorContextHandler;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenJungle;
@@ -34,7 +34,7 @@ public abstract class MixinBiomeGenJungle extends BiomeGenBase {
         }
   
         int i1 = p_76728_2_.nextInt(height);
-        if (!CwgGlobals.getOptionProvider(p_76728_1_).getBoolean("cwg:disable_jungle_melons"))
+        if (!GeneratorContextHandler.INSTANCE.getContext().getOptions().getBoolean("cwg:disable_jungle_melons"))
             (new WorldGenMelon()).generate(p_76728_1_, p_76728_2_, k, i1, l);
         WorldGenVines worldgenvines = new WorldGenVines();
   

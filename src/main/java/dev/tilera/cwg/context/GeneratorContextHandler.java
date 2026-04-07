@@ -5,10 +5,13 @@ import java.util.Stack;
 import dev.tilera.cwg.api.context.IGeneratorContext;
 import dev.tilera.cwg.api.context.IGeneratorContextHandler;
 import net.anvilcraft.anvillib.api.inject.Implementation;
+import net.anvilcraft.anvillib.api.inject.Inject;
 
 @Implementation(IGeneratorContextHandler.class)
 public class GeneratorContextHandler implements IGeneratorContextHandler {
 
+    @Inject(IGeneratorContextHandler.class)
+    public static IGeneratorContextHandler INSTANCE;
     private final ThreadLocal<Stack<IGeneratorContext>> contextStack = ThreadLocal.withInitial(Stack::new);
     private final IGeneratorContext global = new GlobalGeneratorContext();
 
