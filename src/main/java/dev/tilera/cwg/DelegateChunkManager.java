@@ -3,6 +3,7 @@ package dev.tilera.cwg;
 import java.util.List;
 import java.util.Random;
 
+import dev.tilera.cwg.api.generator.AbstractChunkGenerator;
 import dev.tilera.cwg.api.generator.AbstractChunkManager;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import net.minecraft.world.ChunkPosition;
@@ -27,8 +28,12 @@ public class DelegateChunkManager extends AbstractChunkManager {
     }
 
     @Override
-    public IChunkProvider getGenerator(World world) {
-        return this.chunkProvider;
+    public AbstractChunkGenerator getGenerator(World world) {
+        if (chunkProvider instanceof AbstractChunkGenerator) {
+            return (AbstractChunkGenerator) chunkProvider;
+        } else {
+            return new DelegateChunkGenerator(provider, world, chunkProvider);
+        }
     }
 
     @Override

@@ -3,6 +3,7 @@ package dev.tilera.cwg.beta;
 import java.util.List;
 import java.util.Random;
 
+import dev.tilera.cwg.api.generator.AbstractChunkGenerator;
 import dev.tilera.cwg.api.hooks.IHookProvider;
 import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.api.hooks.common.ICavegenHook;
@@ -40,7 +41,7 @@ import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType;
 import net.minecraftforge.event.terraingen.TerrainGen;
 
-public class ChunkProviderGenerate implements IChunkProvider {
+public class ChunkProviderGenerate extends AbstractChunkGenerator {
 	private Random rand;
 	private IBetaNoiseGenerator field_912_k;
 	private IBetaNoiseGenerator field_911_l;
@@ -71,6 +72,7 @@ public class ChunkProviderGenerate implements IChunkProvider {
 	private IGeneratorOptionProvider options;
 
 	public ChunkProviderGenerate(World var1, long var2, boolean var3, IGeneratorOptionProvider options, IBetaBiomeProvider biomeProvider) {
+		super(options, var1);
 		this.worldObj = var1;
 		this.rand = new Random(var2);
 		this.field_912_k = new BetaNoiseGenerator(this.rand, 16);
@@ -238,7 +240,7 @@ public class ChunkProviderGenerate implements IChunkProvider {
 	}
 
     @Override
-	public Chunk provideChunk(int var1, int var2) {
+	public Chunk provideChunkInner(int var1, int var2) {
 		this.rand.setSeed((long)var1 * 341873128712L + (long)var2 * 132897987541L);
 		Block[] var3 = new Block[32768];
 		Block[] blocks2 = new Block[65536];	
@@ -363,7 +365,7 @@ public class ChunkProviderGenerate implements IChunkProvider {
 	}
 
     @Override
-	public void populate(IChunkProvider var1, int var2, int var3) {
+	public void populateInner(IChunkProvider var1, int var2, int var3) {
 		BlockSand.fallInstantly = true;
 		int var4 = var2 * 16;
 		int var5 = var3 * 16;

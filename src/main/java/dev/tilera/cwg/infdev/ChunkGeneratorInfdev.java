@@ -3,6 +3,7 @@ package dev.tilera.cwg.infdev;
 import java.util.List;
 import java.util.Random;
 
+import dev.tilera.cwg.api.generator.AbstractChunkGenerator;
 import dev.tilera.cwg.api.hooks.IHookProvider;
 import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
@@ -28,7 +29,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent.Post;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent.Pre;
 
-public class ChunkGeneratorInfdev implements IChunkProvider {
+public class ChunkGeneratorInfdev extends AbstractChunkGenerator {
    private Random field_913_j;
    private NoiseOctavesInfdev field_912_k;
    private NoiseOctavesInfdev field_911_l;
@@ -56,6 +57,7 @@ public class ChunkGeneratorInfdev implements IChunkProvider {
    int[][] field_914_i = new int[32][32];
 
    public ChunkGeneratorInfdev(World world, long l, boolean par4, IGeneratorOptionProvider options) {
+      super(options, world);
       this.options = options;
       this.field_907_p = world;
       this.mapFeaturesEnabled = par4;
@@ -211,7 +213,7 @@ public class ChunkGeneratorInfdev implements IChunkProvider {
       return this.provideChunk(par1, par2);
    }
 
-   public Chunk provideChunk(int i, int j) {
+   public Chunk provideChunkInner(int i, int j) {
       this.field_913_j.setSeed((long)i * 341873128712L + (long)j * 132897987541L);
       Block[] blocks1 = new Block[32768];
       this.generateTerrain(i, j, blocks1);
@@ -330,7 +332,7 @@ public class ChunkGeneratorInfdev implements IChunkProvider {
       return true;
    }
 
-   public void populate(IChunkProvider ichunkprovider, int i, int j) {
+   public void populateInner(IChunkProvider ichunkprovider, int i, int j) {
       BlockFalling.fallInstantly = true;
       int k = i * 16;
       int l = j * 16;

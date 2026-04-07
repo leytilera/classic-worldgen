@@ -3,12 +3,13 @@ package dev.tilera.cwg.quadrants;
 import java.util.List;
 import java.util.Random;
 
+import dev.tilera.cwg.DelegateChunkGenerator;
+import dev.tilera.cwg.api.generator.AbstractChunkGenerator;
 import dev.tilera.cwg.api.generator.AbstractChunkManager;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.chunk.IChunkProvider;
 
 public class QuadrantChunkManager extends AbstractChunkManager {
 
@@ -21,8 +22,8 @@ public class QuadrantChunkManager extends AbstractChunkManager {
     }
 
     @Override
-    public IChunkProvider getGenerator(World world) {
-        return new QuadrantChunkProvider(quadrants.map((cm) -> cm.getGenerator(world)));
+    public AbstractChunkGenerator getGenerator(World world) {
+        return new DelegateChunkGenerator(options, world, new QuadrantChunkProvider(quadrants.map((cm) -> cm.getGenerator(world)))); 
     }
 
     @Override

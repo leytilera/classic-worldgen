@@ -4,7 +4,6 @@ import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.WorldChunkManager;
-import net.minecraft.world.chunk.IChunkProvider;
 
 public abstract class AbstractChunkManager extends WorldChunkManager {
 
@@ -20,7 +19,7 @@ public abstract class AbstractChunkManager extends WorldChunkManager {
         super(p_i1976_1_);
     }
 
-    public abstract IChunkProvider getGenerator(World world);
+    public abstract AbstractChunkGenerator getGenerator(World world);
 
     public abstract IGeneratorOptionProvider getOptionProvider();
 

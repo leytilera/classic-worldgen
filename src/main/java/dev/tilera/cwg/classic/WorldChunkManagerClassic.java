@@ -1,5 +1,7 @@
 package dev.tilera.cwg.classic;
 
+import dev.tilera.cwg.DelegateChunkGenerator;
+import dev.tilera.cwg.api.generator.AbstractChunkGenerator;
 import dev.tilera.cwg.api.generator.AbstractChunkManager;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.genlayer.GenLayerAddIslandClassic;
@@ -19,7 +21,6 @@ import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.WorldChunkManager;
-import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.GenLayerAddMushroomIsland;
 import net.minecraft.world.gen.layer.GenLayerIsland;
@@ -91,8 +92,8 @@ public class WorldChunkManagerClassic extends AbstractChunkManager{
     }
 
    @Override
-   public IChunkProvider getGenerator(World world) {
-      return new ChunkProviderClassic(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), provider);
+   public AbstractChunkGenerator getGenerator(World world) {
+      return new DelegateChunkGenerator(provider, world, new ChunkProviderClassic(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), provider));
    }
 
    @Override

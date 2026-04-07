@@ -4,16 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import dev.tilera.cwg.api.generator.AbstractChunkGenerator;
 import dev.tilera.cwg.api.generator.AbstractChunkManager;
 import dev.tilera.cwg.api.hooks.IHookProvider;
-import dev.tilera.cwg.api.hooks.common.HookTypes;
-import dev.tilera.cwg.api.hooks.common.ICavegenHook;
-import dev.tilera.cwg.api.hooks.common.IStructureGenHook;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.chunk.IChunkProvider;
 
 public class BetaChunkManager extends AbstractChunkManager implements IBetaChunkManager {
 
@@ -40,10 +37,8 @@ public class BetaChunkManager extends AbstractChunkManager implements IBetaChunk
     }
 
     @Override
-    public IChunkProvider getGenerator(World world) {
-        IStructureGenHook structureHook = provider.getValue("cwg:structuregen_hook", IHookProvider.class).getHook(HookTypes.STRUCTUREGEN);
-		ICavegenHook cavegenHook = provider.getValue("cwg:cavegen_hook", IHookProvider.class).getHook(HookTypes.CAVEGEN);
-        return new ChunkProviderGenerate(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), structureHook, cavegenHook, biomeProvider);
+    public AbstractChunkGenerator getGenerator(World world) {
+        return new ChunkProviderGenerate(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), provider, biomeProvider);
     }
 
     @Override
