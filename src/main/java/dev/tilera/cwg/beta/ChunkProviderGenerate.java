@@ -3,8 +3,11 @@ package dev.tilera.cwg.beta;
 import java.util.List;
 import java.util.Random;
 
+import dev.tilera.cwg.api.hooks.IHookProvider;
+import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.api.hooks.common.ICavegenHook;
 import dev.tilera.cwg.api.hooks.common.IStructureGenHook;
+import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.infdev.ChunkConverter;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSand;
@@ -32,6 +35,10 @@ import net.minecraft.world.gen.feature.WorldGenTallGrass;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraft.world.gen.structure.MapGenMineshaft;
 import net.minecraft.world.gen.structure.MapGenStronghold;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.terraingen.PopulateChunkEvent;
+import net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType;
+import net.minecraftforge.event.terraingen.TerrainGen;
 
 public class ChunkProviderGenerate implements IChunkProvider {
 	private Random rand;
@@ -61,8 +68,9 @@ public class ChunkProviderGenerate implements IChunkProvider {
 	int[][] field_914_i = new int[32][32];
 	private double[] generatedTemperatures;
 	private IBetaBiomeProvider biomeProvider;
+	private IGeneratorOptionProvider options;
 
-	public ChunkProviderGenerate(World var1, long var2, boolean var3, IStructureGenHook structureGenHook, ICavegenHook cavegenHook, IBetaBiomeProvider biomeProvider) {
+	public ChunkProviderGenerate(World var1, long var2, boolean var3, IGeneratorOptionProvider options, IBetaBiomeProvider biomeProvider) {
 		this.worldObj = var1;
 		this.rand = new Random(var2);
 		this.field_912_k = new BetaNoiseGenerator(this.rand, 16);
@@ -73,6 +81,9 @@ public class ChunkProviderGenerate implements IChunkProvider {
 		this.field_922_a = new BetaNoiseGenerator(this.rand, 10);
 		this.field_921_b = new BetaNoiseGenerator(this.rand, 16);
 		this.mobSpawnerNoise = new BetaNoiseGenerator(this.rand, 8);
+		this.options = options;
+		IStructureGenHook structureGenHook = options.getValue("cwg:structuregen_hook", IHookProvider.class).getHook(HookTypes.STRUCTUREGEN);
+		ICavegenHook cavegenHook = options.getValue("cwg:cavegen_hook", IHookProvider.class).getHook(HookTypes.CAVEGEN);
 		this.field_902_u = cavegenHook.createCaveGenerator();
         this.strongholdGenerator = structureGenHook.createStrongholdGenerator();
         this.mineshaftGenerator = structureGenHook.createMineshaftGenerator();
@@ -362,6 +373,11 @@ public class ChunkProviderGenerate implements IChunkProvider {
 		long var9 = this.rand.nextLong() / 2L * 2L + 1L;
 		this.rand.setSeed((long)var2 * var7 + (long)var3 * var9 ^ this.worldObj.getSeed());
 		double var11 = 0.25D;
+
+		if (options.getBoolean("cwg:generator.classic:enableModdedWorldgen")) {
+            MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Pre(var1, worldObj, rand, var2, var3, false));
+        }
+
         if (this.mapFeaturesEnabled) {
             this.strongholdGenerator.generateStructuresInChunk(this.worldObj, this.rand, var2, var3);
             this.mineshaftGenerator.generateStructuresInChunk(this.worldObj, this.rand, var2, var3);
@@ -385,8 +401,9 @@ public class ChunkProviderGenerate implements IChunkProvider {
 			}
 		}
 
+		boolean doGen = !options.getBoolean("cwg:generator.classic:enableModdedWorldgen") || TerrainGen.populate(var1, worldObj, rand, var2, var3, false, EventType.DUNGEON);
 		int var16;
-		for(var13 = 0; var13 < 8; ++var13) {
+		for(var13 = 0; doGen && var13 < 8; ++var13) {
 			var14 = var4 + this.rand.nextInt(16) + 8;
 			var15 = this.rand.nextInt(128);
 			var16 = var5 + this.rand.nextInt(16) + 8;
@@ -647,6 +664,10 @@ public class ChunkProviderGenerate implements IChunkProvider {
 				}
 			}
 		}
+
+		if (options.getBoolean("cwg:generator.classic:enableModdedWorldgen")) {
+            MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(var1, worldObj, rand, var2, var3, false));
+        }
 
 		BlockSand.fallInstantly = false;
 	}
