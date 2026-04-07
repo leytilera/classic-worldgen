@@ -70,10 +70,12 @@ public class ChunkProviderGenerate extends AbstractChunkGenerator {
 	private double[] generatedTemperatures;
 	private IBetaBiomeProvider biomeProvider;
 	private IGeneratorOptionProvider options;
+	private IBetaChunkManager chunkManager;
 
-	public ChunkProviderGenerate(World var1, long var2, boolean var3, IGeneratorOptionProvider options, IBetaBiomeProvider biomeProvider) {
+	public ChunkProviderGenerate(World var1, long var2, boolean var3, IGeneratorOptionProvider options, IBetaBiomeProvider biomeProvider, IBetaChunkManager chunkManager) {
 		super(options, var1);
 		this.worldObj = var1;
+		this.chunkManager = chunkManager;
 		this.rand = new Random(var2);
 		this.field_912_k = new BetaNoiseGenerator(this.rand, 16);
 		this.field_911_l = new BetaNoiseGenerator(this.rand, 16);
@@ -730,7 +732,7 @@ public class ChunkProviderGenerate extends AbstractChunkGenerator {
     }
 
 	public IBetaChunkManager getChunkManager() {
-		return (IBetaChunkManager) this.worldObj.getWorldChunkManager();
+		return chunkManager;
 	}
 
 }
