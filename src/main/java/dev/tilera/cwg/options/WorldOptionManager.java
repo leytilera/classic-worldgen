@@ -26,6 +26,7 @@ public class WorldOptionManager implements IGeneratorOptionManager {
     private File cwgFile;
     private UUID optionSet;
     private Map<UUID, IGeneratorOptionProvider> optionSets = new HashMap<>();
+    private static Map<String, UUID> cachedWorldOptionSets = new HashMap<>();
 
     public WorldOptionManager(World world, IGeneratorOptionManager global) {
         this.global = global;
@@ -34,7 +35,16 @@ public class WorldOptionManager implements IGeneratorOptionManager {
         try {
             this.optionSet = UUID.fromString(world.getWorldInfo().getGeneratorOptions());
         } catch(IllegalArgumentException e) {
-            this.optionSet = DEFAULT;
+            String worldFile = worldDir.getAbsolutePath();
+            if (cachedWorldOptionSets.containsKey(worldFile)) {
+                this.optionSet = cachedWorldOptionSets.get(worldFile);
+            } else {
+                this.optionSet = UUID.randomUUID();
+                cachedWorldOptionSets.put(worldFile, this.optionSet);
+            }
+            IGeneratorOptionProvider copy = this.getOptions(IGeneratorOptionManager.DEFAULT).get().copy();
+            this.saveOptions(optionSet, copy);
+            world.getWorldInfo().generatorOptions = optionSet.toString();
         }
     }
 

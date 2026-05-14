@@ -9,6 +9,7 @@ import dev.tilera.cwg.api.hooks.IHookProvider;
 import dev.tilera.cwg.api.hooks.common.HookTypes;
 import dev.tilera.cwg.api.options.IGeneratorOptionManager;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
+import net.anvilcraft.alec.jalec.factories.AlecUnexpectedRuntimeErrorExceptionFactory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiCreateWorld;
 import net.minecraft.world.World;
@@ -44,10 +45,7 @@ public class WorldTypeCustom extends WorldType {
         try {
             optId = UUID.fromString(opts);
         } catch (IllegalArgumentException e) {
-            optId = UUID.randomUUID();
-            IGeneratorOptionProvider copy = optManager.getOptions(IGeneratorOptionManager.DEFAULT).get().copy();
-            optManager.saveOptions(optId, copy);
-            world.getWorldInfo().generatorOptions = optId.toString();
+            throw AlecUnexpectedRuntimeErrorExceptionFactory.PLAIN.createAlecExceptionWithCause(e, opts);
         }
         IGeneratorOptionProvider options = optManager.getOptions(optId).get();
         AbstractChunkManager manager = options.getValue("cwg:generator", IHookProvider.class).getHook(HookTypes.GENERATOR).createChunkManager(options, world);
