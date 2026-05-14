@@ -2,6 +2,7 @@ package dev.tilera.cwg;
 
 import dev.tilera.cwg.api.CwgGlobals;
 import dev.tilera.cwg.api.generator.AbstractChunkManager;
+import dev.tilera.cwg.api.options.IGeneratorOptionManager;
 import dev.tilera.cwg.api.options.IGeneratorOptionProvider;
 import dev.tilera.cwg.classic.ClassicChunkManagerFactory;
 import dev.tilera.cwg.classic.WorldChunkManagerClassic;
@@ -22,6 +23,9 @@ public class WorldTypeClassic extends WorldType implements IGeneratorOptionProvi
     
     @Override
     public WorldChunkManager getChunkManager(World world) {
+        world.getWorldInfo().generatorOptions = IGeneratorOptionManager.CLASSIC.toString();
+        world.getWorldInfo().terrainType = ClassicWorldgen.CUSTOM;
+        world.getSaveHandler().saveWorldInfo(world.getWorldInfo());
         WorldChunkManagerClassic manager = factory.createChunkManager(this, world);
         return manager;
     }
@@ -99,6 +103,11 @@ public class WorldTypeClassic extends WorldType implements IGeneratorOptionProvi
     @Override
     public IGeneratorOptionProvider copy() {
         return this;
+    }
+
+    @Override
+    public boolean getCanBeCreated() {
+        return false;
     }
 
 }
