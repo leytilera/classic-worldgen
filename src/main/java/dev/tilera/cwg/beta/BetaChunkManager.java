@@ -38,7 +38,7 @@ public class BetaChunkManager extends AbstractChunkManager implements IBetaChunk
 
     @Override
     public AbstractChunkGenerator getGenerator(World world) {
-        return new ChunkProviderGenerate(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), provider, biomeProvider);
+        return new ChunkProviderGenerate(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), provider, biomeProvider, this);
     }
 
     @Override

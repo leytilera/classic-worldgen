@@ -3,7 +3,7 @@ package dev.tilera.cwg.beta;
 import dev.tilera.cwg.biome.Biomes;
 import net.minecraft.world.biome.BiomeGenBase;
 
-public class VanillaBiomeProvider implements IBetaBiomeProvider { //TODO: Implement actual beta biomes
+public class BetaBiomeProvider implements IBetaBiomeProvider {
     
     @Override
     public BiomeGenBase getPlains() {
@@ -12,12 +12,12 @@ public class VanillaBiomeProvider implements IBetaBiomeProvider { //TODO: Implem
 
     @Override
     public BiomeGenBase getForest() {
-        return BiomeGenBase.forest;
+        return Biomes.betaForest;
     }
 
     @Override
     public BiomeGenBase getTaiga() {
-        return BiomeGenBase.taiga;
+        return Biomes.betaTaiga;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class VanillaBiomeProvider implements IBetaBiomeProvider { //TODO: Implem
 
     @Override
     public BiomeGenBase getSwampland() {
-        return BiomeGenBase.swampland;
+        return Biomes.betaSwampland;
     }
 
     @Override
@@ -57,12 +57,12 @@ public class VanillaBiomeProvider implements IBetaBiomeProvider { //TODO: Implem
 
     @Override
     public String getID() {
-        return "cwg:vanilla_biomes";
+        return "cwg:beta_biomes";
     }
 
     @Override
     public String getDisplayName() {
-        return "Vanilla Biome Provider";
+        return "Beta Biome Provider";
     }
 
 }

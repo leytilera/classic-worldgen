@@ -20,6 +20,14 @@ public class Config {
     public static boolean enableModdedWorldgen = true;
     public static int dimensionProviderID = 88;
     public static int classicBiomeID = 70;
+    public static int betaForestBiomeID = 71;
+    public static int betaTaigaBiomeID = 72;
+    public static int tundraBiomeID = 73;
+    public static int seasonalForestBiomeID = 74;
+    public static int rainforestBiomeID = 75;
+    public static int betaSavannaBiomeID = 76;
+    public static int betaSwamplandBiomeID = 77;
+    public static int shrublandBiomeID = 78;
 
     public static void initConfig() {
         conf = new Configuration(new File(Loader.instance().getConfigDir(), "ClassicWorldgen.cfg"));
@@ -38,6 +46,14 @@ public class Config {
         enableModdedWorldgen = conf.getBoolean("enableModdedWorldgen", "worldgen", enableModdedWorldgen, "enable worldgen features from other mods");
         dimensionProviderID = conf.getInt("providerID", "dimensions", dimensionProviderID, Integer.MIN_VALUE, Integer.MAX_VALUE, null);
         classicBiomeID = conf.getInt("classicID", "biomes", classicBiomeID, Integer.MIN_VALUE, Integer.MAX_VALUE, "Biome ID of the Classic biome");
+        betaForestBiomeID = conf.getInt("betaForestID", "biomes", betaForestBiomeID, Integer.MIN_VALUE, Integer.MAX_VALUE, "Biome ID of the Beta Forest biome");
+        betaTaigaBiomeID = conf.getInt("betaTaigaID", "biomes", betaTaigaBiomeID, Integer.MIN_VALUE, Integer.MAX_VALUE, "Biome ID of the Beta Taiga biome");
+        tundraBiomeID = conf.getInt("tundraID", "biomes", tundraBiomeID, Integer.MIN_VALUE, Integer.MAX_VALUE, "Biome ID of the Tundra biome");
+        seasonalForestBiomeID = conf.getInt("seasonalForestID", "biomes", seasonalForestBiomeID, Integer.MIN_VALUE, Integer.MAX_VALUE, "Biome ID of the Seasonal Forest biome");
+        rainforestBiomeID = conf.getInt("rainforestID", "biomes", rainforestBiomeID, Integer.MIN_VALUE, Integer.MAX_VALUE, "Biome ID of the Rainforest biome");
+        betaSavannaBiomeID = conf.getInt("betaSavannaID", "biomes", betaSavannaBiomeID, Integer.MIN_VALUE, Integer.MAX_VALUE, "Biome ID of the Beta Savanna biome");
+        betaSwamplandBiomeID = conf.getInt("betaSwamplandID", "biomes", betaSwamplandBiomeID, Integer.MIN_VALUE, Integer.MAX_VALUE, "Biome ID of the Beta Swampland biome");
+        shrublandBiomeID = conf.getInt("shrublandID", "biomes", shrublandBiomeID, Integer.MIN_VALUE, Integer.MAX_VALUE, "Biome ID of the Shrubland biome");
         conf.save();
     }
 

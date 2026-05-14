@@ -19,10 +19,11 @@ public class BetaModule implements IModule {
         manager.getOptionRegistry().registerOption(new HookOption(
             "cwg:beta_biomes",
             null,
-            new VanillaBiomeProvider(), 
+            new BetaBiomeProvider(), 
             manager.getHookRegistry(), 
             BIOMES).registerDefault()
         );
+        manager.getHookRegistry().registerHookProvider(new VanillaBiomeProvider());
         IModule.super.init(manager);
     }
 
